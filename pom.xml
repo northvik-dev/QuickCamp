@@ -55,7 +55,7 @@
                             <target>
                                 <!-- Copy JAR file to the server plugins directory -->
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
-                                      todir="C:\Users\vikto\Desktop\TestPlugins Server 1.21.4\plugins"/>
+                                      todir="${env.PLUGIN_DIR}"/>
                             </target>
                         </configuration>
                     </execution>
