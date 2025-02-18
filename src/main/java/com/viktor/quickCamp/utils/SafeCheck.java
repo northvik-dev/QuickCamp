@@ -1,20 +1,18 @@
-package com.viktor.quickCamp;
+package com.viktor.quickCamp.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class IsSafe {
+public class SafeCheck {
 
     List<Location> base;
     List<Location> place;
      boolean isAreaSafe;
      boolean isBaseSafe;
 
-    public void areCheck(List<Location> base, List<Location> place ){
+    public void areaCheck(List<Location> base, List<Location> place ){
         this.base = base;
         this.place = place;
 
