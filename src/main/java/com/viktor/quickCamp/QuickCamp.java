@@ -1,8 +1,11 @@
 package com.viktor.quickCamp;
 
 import com.viktor.quickCamp.listeners.CampGUI;
+import com.viktor.quickCamp.utils.ConfigsInitialize;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public final class QuickCamp extends JavaPlugin implements Listener {
 
@@ -10,9 +13,13 @@ public final class QuickCamp extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        main = this;
+        getConfig().options().copyDefaults();
+        saveDefaultConfig();
         // Plugin startup logic
-        getCommand("camp").setExecutor(new CommandHandler());
-        getServer().getPluginManager().registerEvents(new CampGUI(), this);
+        getCommand("camp").setExecutor(new CommandHandler(this));
+
+
     }
 
     @Override
