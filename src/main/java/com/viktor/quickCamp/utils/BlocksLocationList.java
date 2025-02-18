@@ -1,8 +1,6 @@
 package com.viktor.quickCamp.utils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -15,7 +13,7 @@ public class BlocksLocationList {
     //blocks under a player
     List<Location> basementBlockArea = new ArrayList<>();
 
-    public void bloclocations(Player player) {
+    public void blockLocations(Player player) {
         Location playerLoc = player.getLocation();
         World world = playerLoc.getWorld();
 

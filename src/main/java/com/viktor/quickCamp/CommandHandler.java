@@ -1,7 +1,7 @@
 package com.viktor.quickCamp;
 
 import com.viktor.quickCamp.commands.CampCommand;
-import com.viktor.quickCamp.listeners.CampGUI;
+import com.viktor.quickCamp.utils.CampGUI;
 import com.viktor.quickCamp.utils.BlocksLocationList;
 import com.viktor.quickCamp.utils.ConfigsInitialize;
 import org.bukkit.command.Command;
@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandHandler implements CommandExecutor {
@@ -35,18 +36,15 @@ public class CommandHandler implements CommandExecutor {
                }
                if(strings[0].equalsIgnoreCase("gui")){
                    CampGUI cg = new CampGUI();
-                   cg.gui(player);
+                   cg.gui(player, plugin);
                } else
                if (strings[0].equalsIgnoreCase("slots")){
 
-                   List<String> slots =  ci.getYmlConfig().getStringList("placingArea.placing-slots-rows");
 
-                   for (String row : slots){
-                      player.sendMessage(row);
-                   }
+
                }
            }
-            bll.bloclocations(player);
+            bll.blockLocations(player);
 
         }
         return false;

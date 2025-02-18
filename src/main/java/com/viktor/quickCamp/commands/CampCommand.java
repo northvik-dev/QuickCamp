@@ -12,7 +12,7 @@ public class CampCommand {
 
         BlocksLocationList bll = new BlocksLocationList();
         SafeCheck safeCheck = new SafeCheck();
-        bll.bloclocations(player);
+        bll.blockLocations(player);
 
         safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList());
 
