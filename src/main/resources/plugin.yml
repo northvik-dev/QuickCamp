@@ -1,0 +1,8 @@
+name: QuickCamp
+version: '1.0-SNAPSHOT'
+main: com.viktor.quickCamp.QuickCamp
+api-version: '1.21'
+authors: [ Viktor ]
+description: Cool test plugin
+commands:
+  camp:
