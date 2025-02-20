@@ -9,9 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommandHandler implements CommandExecutor {
     private final QuickCamp plugin;
 
@@ -37,11 +34,6 @@ public class CommandHandler implements CommandExecutor {
                if(strings[0].equalsIgnoreCase("gui")){
                    CampGUI cg = new CampGUI();
                    cg.gui(player, plugin);
-               } else
-               if (strings[0].equalsIgnoreCase("slots")){
-
-
-
                }
            }
             bll.blockLocations(player);

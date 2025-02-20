@@ -1,17 +1,25 @@
 package com.viktor.quickCamp.utils;
 
 import com.viktor.quickCamp.QuickCamp;
+import com.viktor.quickCamp.listeners.GuiMenuListener;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ConfigsInitialize {
+
     QuickCamp plugin;
     File file;
     YamlConfiguration config;
     List<Integer> slotIndex = new ArrayList<>();
+    List<Integer> nonUsableSlotIndex = new ArrayList<>();
+    Integer saveButton;
+    Integer closeButton;
 
     public ConfigsInitialize (QuickCamp plugin){
         this.plugin = plugin;
@@ -29,8 +37,12 @@ public class ConfigsInitialize {
     }
 
     public void convertSlotsToInt (){
-        List<String> slots =  config.getStringList("placingArea.placing-slots-rows");
+        List<String> slots =  config.getStringList("GUI-settings.placing-slots");
+        List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
 
+        saveButton = config.getInt("GUI-settings.buttons.save");
+        closeButton = config.getInt("GUI-settings.buttons.close");
+        //Indexing place slots
         for (String row : slots){
             for(String slot : row.split(",")){
                 try {
@@ -40,9 +52,28 @@ public class ConfigsInitialize {
                 }
             }
         }
+        //Indexing non-usable slots
+        for (String row : nonUsableSlots){
+            for(String slot : row.split(",")){
+                try {
+                    nonUsableSlotIndex.add(Integer.parseInt(slot.trim()));
+                } catch (NumberFormatException e){
+                    plugin.getServer().getConsoleSender().sendMessage("Invalid slot number: " + slot);
+                }
+            }
+        }
+    }
+    public Integer getSaveButton(){
+        return saveButton;
+    }
+    public Integer getCloseButton(){
+        return closeButton;
     }
     public List<Integer> getSlotsIndexes(){
         return slotIndex;
+    }
+    public List<Integer> getNonUsableSlotsIndexes(){
+        return nonUsableSlotIndex;
     }
 
     public YamlConfiguration getYmlConfig(){
