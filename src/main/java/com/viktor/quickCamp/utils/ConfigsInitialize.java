@@ -18,6 +18,7 @@ public class ConfigsInitialize {
     YamlConfiguration config;
     List<Integer> slotIndex = new ArrayList<>();
     List<Integer> nonUsableSlotIndex = new ArrayList<>();
+    HashMap<Integer,String> campBlueprint = new HashMap<>();
     Integer saveButton;
     Integer closeButton;
 
@@ -39,9 +40,20 @@ public class ConfigsInitialize {
     public void convertSlotsToInt (){
         List<String> slots =  config.getStringList("GUI-settings.placing-slots");
         List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
-
         saveButton = config.getInt("GUI-settings.buttons.save");
         closeButton = config.getInt("GUI-settings.buttons.close");
+
+        //Getting camp blueprint
+        if (config.getConfigurationSection("CampBlueprint")!= null) {
+            for (String key : config.getConfigurationSection("CampBlueprint.").getKeys(false)) {
+                int slot = Integer.parseInt(key);
+
+                String item = config.getString("CampBlueprint." + key);
+                plugin.getServer().getConsoleSender().sendMessage(slot + " " + item);
+                campBlueprint.put(slot, item);
+            }
+        }
+
         //Indexing place slots
         for (String row : slots){
             for(String slot : row.split(",")){
@@ -62,7 +74,16 @@ public class ConfigsInitialize {
                 }
             }
         }
+
+
+
+
     }
+
+    public HashMap<Integer,String> getCampBlueprint(){
+        return campBlueprint;
+    }
+
     public Integer getSaveButton(){
         return saveButton;
     }
@@ -78,5 +99,9 @@ public class ConfigsInitialize {
 
     public YamlConfiguration getYmlConfig(){
         return config;
+    }
+
+    public File getFile(){
+        return file;
     }
 }

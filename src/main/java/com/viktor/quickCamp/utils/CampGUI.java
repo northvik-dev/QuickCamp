@@ -42,6 +42,14 @@ public class CampGUI {
         for (Integer slot:nonUsableSlots ){
             campGui.setItem(slot,blackGlass );
         }
+        HashMap<Integer,String> campBlueprint = new HashMap<>(ci.getCampBlueprint());
+        for (var entry: campBlueprint.entrySet()){
+            String matString = entry.getValue();
+
+            ItemStack item = new ItemStack(Material.valueOf(matString));
+            campGui.setItem(entry.getKey(),item);
+        }
+
 
         campGui.setItem(ci.saveButton,saveButton);
         campGui.setItem(ci.closeButton,closeButton);

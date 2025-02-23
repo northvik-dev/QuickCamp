@@ -27,8 +27,8 @@ public class CommandHandler implements CommandExecutor {
 
            if (command.getName().equalsIgnoreCase("camp")){
                if (strings.length == 0) {
-                   CampCommand campCommand = new CampCommand();
-                   campCommand.campPlace(player);
+                   CampCommand campCommand = new CampCommand(player, plugin);
+                   campCommand.campPlace();
                    return true;
                }
                if(strings[0].equalsIgnoreCase("gui")){
