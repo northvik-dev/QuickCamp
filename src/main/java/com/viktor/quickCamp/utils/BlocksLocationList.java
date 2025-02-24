@@ -31,7 +31,7 @@ public class BlocksLocationList {
         }
     }
     public List<Location> getPlacingAreaList (){
-        return placingArea;
+        return placingArea.reversed();
     }
     public List<Location> getBasementAreaList (){
         return basementBlockArea;

@@ -21,6 +21,8 @@ public class ConfigsInitialize {
     HashMap<Integer,String> campBlueprint = new HashMap<>();
     Integer saveButton;
     Integer closeButton;
+    Integer clearButton;
+    Integer infoButton;
 
     public ConfigsInitialize (QuickCamp plugin){
         this.plugin = plugin;
@@ -42,6 +44,8 @@ public class ConfigsInitialize {
         List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
         saveButton = config.getInt("GUI-settings.buttons.save");
         closeButton = config.getInt("GUI-settings.buttons.close");
+        clearButton = config.getInt("GUI-settings.buttons.clear");
+        infoButton = config.getInt("GUI-settings.buttons.info");
 
         //Getting camp blueprint
         if (config.getConfigurationSection("CampBlueprint")!= null) {
@@ -49,7 +53,7 @@ public class ConfigsInitialize {
                 int slot = Integer.parseInt(key);
 
                 String item = config.getString("CampBlueprint." + key);
-                plugin.getServer().getConsoleSender().sendMessage(slot + " " + item);
+//                plugin.getServer().getConsoleSender().sendMessage(slot + " " + item);
                 campBlueprint.put(slot, item);
             }
         }
@@ -80,28 +84,36 @@ public class ConfigsInitialize {
 
     }
 
-    public HashMap<Integer,String> getCampBlueprint(){
-        return campBlueprint;
-    }
 
+    //BUTTONS
     public Integer getSaveButton(){
         return saveButton;
     }
     public Integer getCloseButton(){
         return closeButton;
     }
+    public Integer getClearButton(){
+        return clearButton;
+    }
+    public Integer getInfoButton(){
+        return infoButton;
+    }
+    //SLOTS
     public List<Integer> getSlotsIndexes(){
         return slotIndex;
     }
     public List<Integer> getNonUsableSlotsIndexes(){
         return nonUsableSlotIndex;
     }
-
+    //CONFIG
     public YamlConfiguration getYmlConfig(){
         return config;
     }
 
     public File getFile(){
         return file;
+    }
+    public HashMap<Integer,String> getCampBlueprint(){
+        return campBlueprint;
     }
 }

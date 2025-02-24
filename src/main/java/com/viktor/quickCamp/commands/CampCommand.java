@@ -7,6 +7,7 @@ import com.viktor.quickCamp.utils.SafeCheck;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,30 +41,31 @@ public class CampCommand {
             for (int i = 0; i < placingArea.size(); i++) {
                 for (var entry: campBlueprint.entrySet()) {
                     if (placingArea.get(i).equals(entry.getKey())){
+                        Block block =  bll.getPlacingAreaList().get(i).getBlock(); // Current block (foot of the bed)
+                        String value = entry.getValue();
+                        Material mat = Material.valueOf(value);
 
-                        if (entry.getValue().endsWith("_BED")) { // Check if it's a bed
-                            Block foot =  bll.getPlacingAreaList().get(i).getBlock(); // Current block (foot of the bed)
-                            Block head = foot.getRelative(org.bukkit.block.BlockFace.NORTH); // Adjust direction as needed
+                        if (value.endsWith("_BED")) { // Check if it's a bed
+                            block.setType(mat);
+                            Bed bedData = (Bed) block.getBlockData();
+                            bedData.setPart(Bed.Part.HEAD);
+                            bedData.setFacing(BlockFace.WEST);
+                            block.setBlockData(bedData);
 
-                            // Set the bed foot
-                            foot.setType(Material.valueOf(entry.getValue()));
-                            Bed bedData = (Bed) foot.getBlockData();
-                            bedData.setPart(Bed.Part.FOOT);
-                            foot.setBlockData(bedData);
+                            Block footBedBlock = block.getRelative(bedData.getFacing().getOppositeFace());
 
-                            // Set the bed head
-                            head.setType(Material.valueOf(entry.getValue()));
-                            Bed headData = (Bed) head.getBlockData();
-                            headData.setPart(Bed.Part.HEAD);
-                            head.setBlockData(headData);
+                            footBedBlock.setType(mat);
+                            Bed footBedData = (Bed) footBedBlock.getBlockData();
+                            footBedData.setPart(Bed.Part.FOOT);
+                            footBedData.setFacing(BlockFace.WEST);
+                            footBedBlock.setBlockData(footBedData);
+
+
                         } else {
                             // Place any other block normally
-                            bll.getPlacingAreaList()
-                                    .get(i)
-                                    .getBlock()
-                                    .setType(Material.valueOf(entry.getValue()));
-                        }
+                            block.setType(mat);
 
+                        }
                     }
                 }
             }

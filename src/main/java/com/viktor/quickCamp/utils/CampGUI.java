@@ -3,14 +3,13 @@ package com.viktor.quickCamp.utils;
 import com.viktor.quickCamp.QuickCamp;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.EventListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,6 +36,17 @@ public class CampGUI {
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
         closeButtonMeta.setItemName("Close");
         closeButton.setItemMeta(closeButtonMeta);
+        //Clear button
+        ItemStack clearButton = new ItemStack(Material.YELLOW_CONCRETE);
+        ItemMeta clearButtonMeta = clearButton.getItemMeta();
+        clearButtonMeta.setItemName("Clear");
+        clearButton.setItemMeta(clearButtonMeta);
+        //Info button
+        ItemStack infoButton = new ItemStack(Material.YELLOW_CANDLE);
+        ItemMeta infoButtonMeta = infoButton.getItemMeta();
+        infoButtonMeta.setItemName("Info");
+        infoButtonMeta.setLore(Arrays.asList("-Some info", "-Info again"));
+        infoButton.setItemMeta(infoButtonMeta);
 
         List<Integer> nonUsableSlots = new ArrayList<>(ci.getNonUsableSlotsIndexes());
         for (Integer slot:nonUsableSlots ){
@@ -53,6 +63,8 @@ public class CampGUI {
 
         campGui.setItem(ci.saveButton,saveButton);
         campGui.setItem(ci.closeButton,closeButton);
+        campGui.setItem(ci.clearButton,clearButton);
+        campGui.setItem(ci.infoButton,infoButton);
 
         player.openInventory(campGui);
     }
