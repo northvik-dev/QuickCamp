@@ -12,9 +12,10 @@ public class BlocksLocationList {
     List<Location> placingArea = new ArrayList<>();
     //blocks under a player
     List<Location> basementBlockArea = new ArrayList<>();
+    Location playerLoc;
 
     public void blockLocations(Player player) {
-        Location playerLoc = player.getLocation();
+        playerLoc = player.getLocation();
         World world = playerLoc.getWorld();
 
         //adding coordinates of blocks
@@ -29,6 +30,9 @@ public class BlocksLocationList {
             }
 
         }
+    }
+    public Location getCampLocation(){
+        return playerLoc;
     }
     public List<Location> getPlacingAreaList (){
         return placingArea.reversed();

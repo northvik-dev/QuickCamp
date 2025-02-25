@@ -1,9 +1,11 @@
 package com.viktor.quickCamp;
 
 import com.viktor.quickCamp.commands.CampCommand;
+import com.viktor.quickCamp.commands.CampRemove;
 import com.viktor.quickCamp.utils.CampGUI;
 import com.viktor.quickCamp.utils.BlocksLocationList;
 import com.viktor.quickCamp.utils.ConfigsInitialize;
+import com.viktor.quickCamp.utils.LocatedCamp;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,6 +36,9 @@ public class CommandHandler implements CommandExecutor {
                if(strings[0].equalsIgnoreCase("gui")){
                    CampGUI cg = new CampGUI();
                    cg.gui(player, plugin);
+               }else if(strings[0].equalsIgnoreCase("remove")){
+                    CampRemove campRemove = new CampRemove(player, bll.getCampLocation(), plugin);
+                    campRemove.removeCamp();
                }
            }
             bll.blockLocations(player);
