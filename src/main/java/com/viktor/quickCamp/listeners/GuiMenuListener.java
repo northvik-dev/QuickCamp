@@ -52,6 +52,7 @@ public class GuiMenuListener implements Listener {
 
            //save button function
            if (e.getRawSlot()== ci.getSaveButton()){
+               config.set("CampBlueprint", null);
                saveBlueprint(ci, config, file, e.getInventory());
                player.sendMessage("Blueprint is saved into configs!");
                e.setCancelled(true);
@@ -66,7 +67,7 @@ public class GuiMenuListener implements Listener {
             if (e.getRawSlot()== ci.getClearButton()){
                 clearSlots(e.getInventory(), ci);
                 config.set("CampBlueprint", null);
-                saveConfig(config,file);
+                ci.saveConfig(config,file);
                 e.setCancelled(true);
             }
             // info button function
@@ -83,7 +84,7 @@ public class GuiMenuListener implements Listener {
            if (!isSlotEmpty(inventory, slot)){
                config.set("CampBlueprint." + slot,inventory.getItem(slot).getType().name());
            }
-           saveConfig(config,file);
+           ci.saveConfig(config,file);
        }
     }
 
@@ -96,14 +97,7 @@ public class GuiMenuListener implements Listener {
         }
     }
 
-    public void saveConfig(YamlConfiguration config, File file){
-        try {
-            config.save(file);
-        } catch (Exception ex) {
-            Bukkit.getServer().getConsoleSender().sendMessage("Couldn't save configs");
-            throw new RuntimeException(ex);
-        }
-    }
+
 
     public boolean isSlotEmpty(Inventory inv, Integer slot){
         ItemStack item = inv.getItem(slot);

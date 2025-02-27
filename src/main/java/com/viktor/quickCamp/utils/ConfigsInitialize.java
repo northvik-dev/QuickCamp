@@ -2,7 +2,10 @@ package com.viktor.quickCamp.utils;
 
 import com.viktor.quickCamp.QuickCamp;
 import com.viktor.quickCamp.listeners.GuiMenuListener;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -10,12 +13,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class ConfigsInitialize {
 
     QuickCamp plugin;
     File file;
+    File locationFile;
     YamlConfiguration config;
+    YamlConfiguration campLocationConfig;
     List<Integer> slotIndex = new ArrayList<>();
     List<Integer> nonUsableSlotIndex = new ArrayList<>();
     HashMap<Integer,String> campBlueprint = new HashMap<>();
@@ -32,13 +38,14 @@ public class ConfigsInitialize {
 
     public void loadFile(){
         file = new File(plugin.getPlugin().getDataFolder(), "config.yml");
-
-        if (!file.exists()){
+        locationFile = new File(plugin.getPlugin().getDataFolder(),"playerCampLocations.yml");
+        if (!file.exists() || !locationFile.exists()){
             plugin.getServer().getConsoleSender().sendMessage("Config file doesn't exist!");
         }
+        campLocationConfig = YamlConfiguration.loadConfiguration(locationFile);
         config = YamlConfiguration.loadConfiguration(file);
     }
-
+//////////////////////GUI//////////////////
     public void convertSlotsToInt (){
         List<String> slots =  config.getStringList("GUI-settings.placing-slots");
         List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
@@ -53,7 +60,6 @@ public class ConfigsInitialize {
                 int slot = Integer.parseInt(key);
 
                 String item = config.getString("CampBlueprint." + key);
-//                plugin.getServer().getConsoleSender().sendMessage(slot + " " + item);
                 campBlueprint.put(slot, item);
             }
         }
@@ -78,12 +84,14 @@ public class ConfigsInitialize {
                 }
             }
         }
+    }
+/////////////////END OF GUI/////////////
 
+///////////////////DATA LOCATION///////////
 
-
+    public void addCampLocation(Player player, List<Location> locationList){
 
     }
-
 
     //BUTTONS
     public Integer getSaveButton(){
@@ -110,10 +118,25 @@ public class ConfigsInitialize {
         return config;
     }
 
+    public YamlConfiguration getCampLocationConfig(){
+        return campLocationConfig;
+    }
+    public File getLocationFile(){
+        return locationFile;
+    }
     public File getFile(){
         return file;
     }
     public HashMap<Integer,String> getCampBlueprint(){
         return campBlueprint;
+    }
+    ///CONFIG SAVE
+    public void saveConfig(YamlConfiguration config, File file){
+        try {
+            config.save(file);
+        } catch (Exception ex) {
+            Bukkit.getServer().getConsoleSender().sendMessage("Couldn't save configs");
+            throw new RuntimeException(ex);
+        }
     }
 }

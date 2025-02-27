@@ -3,9 +3,10 @@ package com.viktor.quickCamp.commands;
 import com.viktor.quickCamp.QuickCamp;
 import com.viktor.quickCamp.utils.BlocksLocationList;
 import com.viktor.quickCamp.utils.ConfigsInitialize;
-import com.viktor.quickCamp.utils.LocatedCamp;
+import com.viktor.quickCamp.utils.LocatedCampPDC;
 import com.viktor.quickCamp.utils.SafeCheck;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,36 +15,31 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class CampCommand {
     Player player;
     QuickCamp plugin;
     BlocksLocationList bll = new BlocksLocationList();
-    boolean isCamping;
-    public CampCommand(Player player, QuickCamp plugin){
+    ConfigsInitialize ci;
+    public CampCommand(Player player, QuickCamp plugin, ConfigsInitialize ci){
         this.player = player;
         this.plugin = plugin;
+        this.ci = ci;
     }
 
     public void campPlace(){
         SafeCheck safeCheck = new SafeCheck();
         bll.blockLocations(player);
-        LocatedCamp locatedCamp = new LocatedCamp(player, bll.getCampLocation(), plugin);
+        LocatedCampPDC locatedCampPDC = new LocatedCampPDC(player, bll.getCampLocation(), plugin);
         safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList());
-        PersistentDataContainer data = locatedCamp.getData();
 
-        if (data.has(locatedCamp.getKey(), PersistentDataType.BOOLEAN)){
-            isCamping = data.get(locatedCamp.getKey(), PersistentDataType.BOOLEAN);
-        }
 
-        if (!isCamping){
+        if (!locatedCampPDC.isCamping()){
             if (safeCheck.isSafe()) {
                 setCamp();
-                locatedCamp.setCamp();
-                player.sendMessage("You have set camp at: " + locatedCamp.getCampLocation());
+                locatedCampPDC.setCamp();
+                player.sendMessage(ChatColor.GREEN + "You have set camp at: " + locatedCampPDC.getCampLocation());
             } else {
                 player.sendMessage(ChatColor.RED + "You can not place camp on air | water | lava | ice. Make sure that basement is strong and 5x5 flat are!");
             }
@@ -52,7 +48,6 @@ public class CampCommand {
         }
     }
     public void setCamp(){
-        ConfigsInitialize ci = new ConfigsInitialize(plugin);
         HashMap<Integer, String> campBlueprint = new HashMap<>(ci.getCampBlueprint());
         List<Integer> placingArea = new ArrayList<>(ci.getSlotsIndexes());
 
@@ -88,5 +83,20 @@ public class CampCommand {
                 }
             }
         }
+        addPlayerCampLocation();
+    }
+///// Review this part, use HASH MAP to write a locations!
+    public void addPlayerCampLocation(){
+
+        String path = player.getUniqueId().toString();
+
+        List<Map<String,Object>> blockLocations = new ArrayList<>();
+
+        for(Location block : bll.getPlacingAreaList()){
+           blockLocations.add(block.serialize());
+        }
+
+        ci.getCampLocationConfig().set(path, blockLocations);
+        ci.saveConfig(ci.getCampLocationConfig(),ci.getLocationFile());
     }
 }
