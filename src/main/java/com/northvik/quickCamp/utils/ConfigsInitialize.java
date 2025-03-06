@@ -1,19 +1,13 @@
-package com.viktor.quickCamp.utils;
+package com.northvik.quickCamp.utils;
 
-import com.viktor.quickCamp.QuickCamp;
-import com.viktor.quickCamp.listeners.GuiMenuListener;
+import com.northvik.quickCamp.QuickCamp;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class ConfigsInitialize {
 
@@ -87,12 +81,6 @@ public class ConfigsInitialize {
     }
 /////////////////END OF GUI/////////////
 
-///////////////////DATA LOCATION///////////
-
-    public void addCampLocation(Player player, List<Location> locationList){
-
-    }
-
     //BUTTONS
     public Integer getSaveButton(){
         return saveButton;
@@ -130,6 +118,8 @@ public class ConfigsInitialize {
     public HashMap<Integer,String> getCampBlueprint(){
         return campBlueprint;
     }
+
+
     ///CONFIG SAVE
     public void saveConfig(YamlConfiguration config, File file){
         try {

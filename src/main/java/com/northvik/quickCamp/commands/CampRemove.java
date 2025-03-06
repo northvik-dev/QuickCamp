@@ -1,8 +1,9 @@
-package com.viktor.quickCamp.commands;
+package com.northvik.quickCamp.commands;
 
-import com.viktor.quickCamp.QuickCamp;
-import com.viktor.quickCamp.utils.ConfigsInitialize;
-import com.viktor.quickCamp.utils.LocatedCampPDC;
+import com.northvik.quickCamp.QuickCamp;
+import com.northvik.quickCamp.utils.ClaimHandler;
+import com.northvik.quickCamp.utils.ConfigsInitialize;
+import com.northvik.quickCamp.utils.LocatedCampPDC;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,7 +27,8 @@ public class CampRemove {
 
         String path = player.getUniqueId().toString();
         LocatedCampPDC lc = new LocatedCampPDC(player,camplocation,plugin);
-
+//        CampCustomBlockData campCBD = new CampCustomBlockData(plugin, player);
+        ClaimHandler claimHandler = new ClaimHandler();
         List<Map<?,?>> locationList = ci.getCampLocationConfig().getMapList(path);
 
         if (locationList.isEmpty()){
@@ -34,16 +36,21 @@ public class CampRemove {
         }else {
 
             for (Map<?, ?> map : locationList) {
-                Location block = Location.deserialize((Map<String, Object>) map);
-                block.getBlock().setType(Material.AIR);
+                Location loc = Location.deserialize((Map<String, Object>) map);
+
+//                for (Location location : campCBD.expandClaim(loc.getBlock())){
+//                    campCBD.removeCustomBlockData(location.getBlock());
+//                }
+
+                loc.getBlock().setType(Material.AIR, false);
             }
 
             ci.getCampLocationConfig().set(path, null);
             ci.saveConfig(ci.getCampLocationConfig(), ci.getLocationFile());
             lc.removeCamping();
+            claimHandler.removeClaim(player);
 
-
-            player.sendMessage(ChatColor.GREEN + "Your camp was removed!");
+            player.sendMessage(ChatColor.GREEN + "Your camp been removed!");
         }
     }
 

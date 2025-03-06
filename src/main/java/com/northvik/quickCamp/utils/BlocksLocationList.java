@@ -1,4 +1,4 @@
-package com.viktor.quickCamp.utils;
+package com.northvik.quickCamp.utils;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,6 +31,7 @@ public class BlocksLocationList {
 
         }
     }
+
     public Location getCampLocation(){
         return playerLoc;
     }

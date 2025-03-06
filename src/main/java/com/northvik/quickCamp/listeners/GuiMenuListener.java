@@ -1,8 +1,7 @@
-package com.viktor.quickCamp.listeners;
+package com.northvik.quickCamp.listeners;
 
-import com.viktor.quickCamp.QuickCamp;
-import com.viktor.quickCamp.utils.ConfigsInitialize;
-import org.bukkit.Bukkit;
+import com.northvik.quickCamp.QuickCamp;
+import com.northvik.quickCamp.utils.ConfigsInitialize;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -83,6 +82,9 @@ public class GuiMenuListener implements Listener {
         for ( Integer slot : placingSlots) {
            if (!isSlotEmpty(inventory, slot)){
                config.set("CampBlueprint." + slot,inventory.getItem(slot).getType().name());
+           } else{
+               config.set("CampBlueprint." + slot, Material.AIR.name());
+
            }
            ci.saveConfig(config,file);
        }

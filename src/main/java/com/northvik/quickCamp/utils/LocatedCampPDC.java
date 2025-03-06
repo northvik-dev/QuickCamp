@@ -1,6 +1,6 @@
-package com.viktor.quickCamp.utils;
+package com.northvik.quickCamp.utils;
 
-import com.viktor.quickCamp.QuickCamp;
+import com.northvik.quickCamp.QuickCamp;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -13,11 +13,14 @@ public class LocatedCampPDC {
     String campLocation;
     QuickCamp plugin;
     PersistentDataContainer data;
+
     NamespacedKey keyIsCamping;
     NamespacedKey keyWorld;
     NamespacedKey keyX;
     NamespacedKey keyY;
     NamespacedKey keyZ;
+
+
     public LocatedCampPDC(Player player, Location RawLocation, QuickCamp plugin){
         this.player = player;
         this.RawLocation = RawLocation;
@@ -29,7 +32,6 @@ public class LocatedCampPDC {
         this.keyY = new NamespacedKey(plugin,"keyY");
         this.keyZ = new NamespacedKey(plugin,"keyZ");
         this.data = player.getPersistentDataContainer();
-
     }
     public void setCamp(){
         data.set(keyWorld, PersistentDataType.STRING, RawLocation.getWorld().getName());
@@ -51,6 +53,7 @@ public class LocatedCampPDC {
         return data.has(keyIsCamping,PersistentDataType.BOOLEAN) && Boolean.TRUE.equals(data.get(keyIsCamping, PersistentDataType.BOOLEAN));
 
     }
+
     public void removeCamping(){
         data.remove(keyIsCamping);
         data.remove(keyWorld);

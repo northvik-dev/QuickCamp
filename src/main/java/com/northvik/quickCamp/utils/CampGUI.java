@@ -1,6 +1,6 @@
-package com.viktor.quickCamp.utils;
+package com.northvik.quickCamp.utils;
 
-import com.viktor.quickCamp.QuickCamp;
+import com.northvik.quickCamp.QuickCamp;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
