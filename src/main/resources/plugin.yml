@@ -1,8 +1,21 @@
 name: QuickCamp
 version: '1.0-SNAPSHOT'
-main: com.viktor.quickCamp.QuickCamp
+main: com.northvik.quickCamp.QuickCamp
 api-version: '1.21'
 authors: [ Viktor ]
-description: Cool test plugin
+description: Quick Camp plugin.
+depend: [WorldGuard]
+
 commands:
   camp:
+    description: Main command for managing camps
+    permission: quickcamp.camp
+    permission-message: You do not have permission to use this command!
+
+permissions:
+  quickcamp.camp:
+    description: Grants access to the base /camp command
+    default: true
+  quickcamp.camp.gui:
+    description: Grants access to /camp gui
+    default: op

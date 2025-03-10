@@ -1,7 +1,7 @@
-package com.viktor.quickCamp;
+package com.northvik.quickCamp;
 
-import com.viktor.quickCamp.listeners.GuiMenuListener;
-import com.viktor.quickCamp.utils.CampGUI;
+import com.northvik.quickCamp.listeners.BlockInteractionListener;
+import com.northvik.quickCamp.listeners.GuiMenuListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +18,7 @@ public final class QuickCamp extends JavaPlugin implements Listener {
 
         getCommand("camp").setExecutor(new CommandHandler(this));
         Bukkit.getPluginManager().registerEvents(new GuiMenuListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new BlockInteractionListener(this), this);
 
     }
 
