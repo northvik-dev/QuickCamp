@@ -33,7 +33,7 @@ public class GuiMenuListener implements Listener {
 
         if (e.getView().getTitle().equals("Camp GUI")){
             List<Integer> nonUsableSlots = new ArrayList<>(ci.getNonUsableSlotsIndexes());
-            List<Integer> placingSlots = new ArrayList<>(ci.getSlotsIndexes());
+//            List<Integer> placingSlots = new ArrayList<>(ci.getSlotsIndexes());
 
             //non usable slots area
             for (Integer slot : nonUsableSlots){
@@ -43,11 +43,11 @@ public class GuiMenuListener implements Listener {
             }
 
             //blueprint area
-            for (Integer slot : placingSlots){
-                if (e.getClick().isMouseClick() && e.getRawSlot()==slot ){
-
-                }
-            }
+//            for (Integer slot : placingSlots){
+//                if (e.getClick().isMouseClick() && e.getRawSlot()==slot ){
+//
+//                }
+//            }
 
            //save button function
            if (e.getRawSlot()== ci.getSaveButton()){

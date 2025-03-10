@@ -5,7 +5,6 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.bukkit.event.entity.DamageEntityEvent;
-import com.sk89q.worldguard.bukkit.event.inventory.UseItemEvent;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -92,7 +91,17 @@ public class BlockInteractionListener implements Listener {
                 player.sendMessage(grey+ "You not owner of the camp!");
                 e.setCancelled(true);
             }
+            if (e.getItem() != null && e.getItem().getType() == Material.LAVA_BUCKET) {
+                player = e.getPlayer();
+                location = e.getClickedBlock().getLocation();
+                query = regionContainer().createQuery();
+
+                if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.LAVA_FLOW)){
+                    e.setCancelled(true);
+                }
+            }
         }
+
     }
 
     @EventHandler
@@ -113,10 +122,6 @@ public class BlockInteractionListener implements Listener {
         }
     }
 
-    @EventHandler
-    public void onLavaWaterPlace (UseItemEvent e){
-
-    }
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {

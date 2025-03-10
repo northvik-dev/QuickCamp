@@ -8,3 +8,14 @@ depend: [WorldGuard]
 
 commands:
   camp:
+    description: Main command for managing camps
+    permission: quickcamp.camp
+    permission-message: You do not have permission to use this command!
+
+permissions:
+  quickcamp.camp:
+    description: Grants access to the base /camp command
+    default: true
+  quickcamp.camp.gui:
+    description: Grants access to /camp gui
+    default: op

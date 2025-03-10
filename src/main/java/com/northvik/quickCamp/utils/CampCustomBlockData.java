@@ -12,7 +12,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-
+//TODO - CustomBlockData was changed to WorldGuard implementation. Review reusability or delete.
 public class CampCustomBlockData {
     QuickCamp plugin;
     NamespacedKey keyBlock;

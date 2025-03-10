@@ -39,7 +39,7 @@ public class ConfigsInitialize {
         campLocationConfig = YamlConfiguration.loadConfiguration(locationFile);
         config = YamlConfiguration.loadConfiguration(file);
     }
-//////////////////////GUI//////////////////
+
     public void convertSlotsToInt (){
         List<String> slots =  config.getStringList("GUI-settings.placing-slots");
         List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
@@ -79,7 +79,6 @@ public class ConfigsInitialize {
             }
         }
     }
-/////////////////END OF GUI/////////////
 
     //BUTTONS
     public Integer getSaveButton(){

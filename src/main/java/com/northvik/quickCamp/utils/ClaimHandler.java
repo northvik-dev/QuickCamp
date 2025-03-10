@@ -5,12 +5,10 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flags;
-import com.sk89q.worldguard.protection.flags.RegionGroup;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -66,10 +64,12 @@ public class ClaimHandler {
             region.setFlag(Flags.BUILD, StateFlag.State.DENY);
             region.setFlag(Flags.PVP, StateFlag.State.DENY);
             region.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
-            region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.DENY);
+            region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.ALLOW);
             region.setFlag(Flags.OTHER_EXPLOSION, StateFlag.State.DENY);
             region.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
             region.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
+            region.setFlag(Flags.SLEEP, StateFlag.State.ALLOW);
+            region.setFlag(Flags.LAVA_FLOW, StateFlag.State.DENY);
 
         }
     }
