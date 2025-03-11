@@ -7,6 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 public class CampGUI {
@@ -22,24 +28,24 @@ public class CampGUI {
         blackGlass.setItemMeta(blackGlassMeta);
 
         // Save button
-        ItemStack saveButton = new ItemStack(Material.GREEN_CONCRETE);
+        ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
         ItemMeta saveButtonMeta = saveButton.getItemMeta();
         saveButtonMeta.setItemName("Save setup");
         saveButton.setItemMeta(saveButtonMeta);
 
         // Close button
-        ItemStack closeButton = new ItemStack(Material.RED_CONCRETE);
+        ItemStack closeButton = getCustomSkull("27548362a24c0fa8453e4d93e68c5969ddbde57bf6666c0319c1ed1e84d89065");
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
         closeButtonMeta.setItemName("Close");
         closeButton.setItemMeta(closeButtonMeta);
         //Clear button
-        ItemStack clearButton = new ItemStack(Material.YELLOW_CONCRETE);
+        ItemStack clearButton = getCustomSkull("cb067ae612d5256a24ccfc74c11814f01962b4d81817a618134b45f36fe6fcb3");
         ItemMeta clearButtonMeta = clearButton.getItemMeta();
         clearButtonMeta.setItemName("Clear");
         clearButton.setItemMeta(clearButtonMeta);
         //Info button
-        ItemStack infoButton = new ItemStack(Material.CANDLE);
-        ItemMeta infoButtonMeta = clearButton.getItemMeta();
+        ItemStack infoButton = getCustomSkull("2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec");
+        ItemMeta infoButtonMeta = infoButton.getItemMeta();
         infoButtonMeta.setItemName("Info");
         infoButtonMeta.setLore(Arrays.asList(
                 ChatColor.GRAY + "Use Clear button to clear blueprint configs table.",
@@ -47,7 +53,6 @@ public class CampGUI {
                 ChatColor.GRAY + "Use Close button to close menu without saving."));
         infoButton.setItemMeta(infoButtonMeta);
 
-       // ItemStack infoButton = createCustomHead("Info", Arrays.asList("-Some info", "-Info again"), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjcwNWZkOTRhMGM0MzE5MjdmYjRlNjM5YjBmY2ZiNDk3MTdlNDEyMjg1YTAyYjQzOWUwMTEyZGEyMmIyZTJlYyJ9fX0=");
 
 
         List<Integer> nonUsableSlots = new ArrayList<>(ci.getNonUsableSlotsIndexes());
@@ -70,33 +75,25 @@ public class CampGUI {
 
         player.openInventory(campGui);
     }
-//TODO - resolve issue
-//Caused by: java.lang.IllegalArgumentException: Can not set net.minecraft.world.item.component.ResolvableProfile field org.bukkit.craftbukkit.inventory.CraftMetaSkull.profile to com.mojang.authlib.GameProfile
 
-/*   public static ItemStack createCustomHead(String name, List<String> lore, String texture) {
-        // Create a player head item
-        ItemStack button = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta buttonMeta = (SkullMeta) button.getItemMeta();
+    public ItemStack getCustomSkull(String texture) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+        PlayerTextures playerTextures = profile.getTextures();
+        URL url = null;
 
-        if (buttonMeta != null) {
-            buttonMeta.setDisplayName(ChatColor.GOLD + name);
-            buttonMeta.setLore(lore);
+        try {
+            url = new URL("http://textures.minecraft.net/texture/"+texture);
+        } catch (MalformedURLException ignored) {
 
-            GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-            profile.getProperties().put("textures", new Property("textures",texture));
-
-            Field field;
-
-            try {
-              field = buttonMeta.getClass().getDeclaredField("profile");
-              field.setAccessible(true);
-              field.set(buttonMeta, profile);
-            } catch (NoSuchFieldException | IllegalAccessException e){
-                e.printStackTrace();
-
-            }
-            button.setItemMeta(buttonMeta);
         }
-        return button;
-    }*/
+        playerTextures.setSkin(url);
+        profile.setTextures(playerTextures);
+
+        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta skullMeta = (SkullMeta) itemStack.getItemMeta();
+        skullMeta.setOwnerProfile(profile);
+        itemStack.setItemMeta(skullMeta);
+
+        return itemStack;
+    }
 }
