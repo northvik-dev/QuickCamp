@@ -32,7 +32,7 @@ public class ConfigsInitialize {
 
     public void loadFile(){
         file = new File(plugin.getPlugin().getDataFolder(), "config.yml");
-        locationFile = new File(plugin.getPlugin().getDataFolder(), "camps.yml");
+        locationFile = new File(plugin.getPlugin().getDataFolder(),"playerCampLocations.yml");
         if (!file.exists() || !locationFile.exists()){
             plugin.getServer().getConsoleSender().sendMessage("Config file doesn't exist!");
         }
