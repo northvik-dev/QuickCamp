@@ -49,9 +49,10 @@ public class BlockInteractionListener implements Listener {
     }
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
+        player = e.getPlayer();
         localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         query = regionContainer().createQuery();
-        player = e.getPlayer();
+
         location = e.getBlock().getLocation();
         if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
             player.sendMessage(grey+ "You cannot break block here!");
@@ -61,9 +62,9 @@ public class BlockInteractionListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e){
+        player = e.getPlayer();
         localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         query = regionContainer().createQuery();
-        player = e.getPlayer();
         location = e.getBlock().getLocation();
         if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
             player.sendMessage(grey+ "You cannot place block here!");
