@@ -1,3 +1,7 @@
+# Quick Camp - BETA  
+
+[![Discord](https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white)](https://discord.gg/jT8X9faerT)  [![Wiki](https://img.shields.io/badge/Wiki-Documentation-blue?style=flat&logo=bookstack)](https://github.com/northvik-dev/QuickCamp-alpha-1.0/wiki)  [![Spigot](https://img.shields.io/badge/Spigot-Download-orange?style=flat&logo=spigotmc)](https://www.spigotmc.org/resources/quick-camp-alpha.123204/)  
+
 # 🌲 Quick Camp - alpha 1.0
 
 **🏕️ A Simple & Immersive Camping Plugin for Minecraft!**
