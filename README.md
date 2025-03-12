@@ -39,4 +39,7 @@ QuickCamp allows players to set up temporary camps while exploring, adding an RP
 
 ### 📢 Dependencies
 
-- **WorldGuard** (for protection support)
+Dependencies:
+**WorldEdit**	Required for WorldGuard
+**WorldGuard**	Required for QuickCamp
+
