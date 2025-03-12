@@ -2,10 +2,10 @@ package com.northvik.quickCamp;
 
 import com.northvik.quickCamp.commands.CampCommand;
 import com.northvik.quickCamp.commands.CampRemove;
-import com.northvik.quickCamp.utils.BlocksLocationList;
-import com.northvik.quickCamp.utils.CampGUI;
-import com.northvik.quickCamp.utils.ConfigsInitialize;
-import com.northvik.quickCamp.utils.LocatedCampPDC;
+import com.northvik.quickCamp.managers.BlocksLocationList;
+import com.northvik.quickCamp.managers.CampGUI;
+import com.northvik.quickCamp.managers.ConfigsInitialize;
+import com.northvik.quickCamp.managers.LocatedCampPDC;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

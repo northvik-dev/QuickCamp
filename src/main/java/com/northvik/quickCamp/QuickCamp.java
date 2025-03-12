@@ -13,8 +13,7 @@ public final class QuickCamp extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         main = this;
-        getConfig().options().copyDefaults();
-        saveDefaultConfig();
+
 
         getCommand("camp").setExecutor(new CommandHandler(this));
         Bukkit.getPluginManager().registerEvents(new GuiMenuListener(this), this);

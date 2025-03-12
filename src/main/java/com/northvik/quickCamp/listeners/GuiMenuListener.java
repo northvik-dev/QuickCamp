@@ -1,7 +1,7 @@
 package com.northvik.quickCamp.listeners;
 
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.ConfigsInitialize;
+import com.northvik.quickCamp.managers.ConfigsInitialize;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;

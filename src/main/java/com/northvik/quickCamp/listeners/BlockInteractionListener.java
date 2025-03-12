@@ -1,6 +1,7 @@
 package com.northvik.quickCamp.listeners;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.world.block.BlockType;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -11,7 +12,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.ConfigsInitialize;
+import com.northvik.quickCamp.managers.ConfigsInitialize;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,8 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -38,6 +37,7 @@ public class BlockInteractionListener implements Listener {
     RegionQuery query;
     LocalPlayer localPlayer;
     String rgName = "_QuickCamp";
+    List<Material> protectedBlocks;
 
     ChatColor grey = ChatColor.GRAY;
 
@@ -45,17 +45,19 @@ public class BlockInteractionListener implements Listener {
         ConfigsInitialize ci = new ConfigsInitialize(plugin);
         this.plugin = plugin;
         this.playerCamp = ci.getCampLocationConfig();
-
+        this.protectedBlocks = ci.getGoodsProtectionList();
     }
-    @EventHandler
+    //Found this part unnecessary at the moment as WorldGuard cancel place/break by default.
+    //Will leave it until would be fully sure.
+    /*@EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         player = e.getPlayer();
         localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         query = regionContainer().createQuery();
 
         location = e.getBlock().getLocation();
-        if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
-            player.sendMessage(grey+ "You cannot break block here!");
+        if(isBlockInRegion(player, e.getBlock().getLocation())&&!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BLOCK_BREAK)){
+            //player.sendMessage(grey+ "You cannot break block here!");
             e.setCancelled(true);
         }
     }
@@ -66,39 +68,43 @@ public class BlockInteractionListener implements Listener {
         localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
         query = regionContainer().createQuery();
         location = e.getBlock().getLocation();
-        if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
-            player.sendMessage(grey+ "You cannot place block here!");
+        if(isBlockInRegion(player, e.getBlock().getLocation())&&!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
+            //player.sendMessage(grey+ "You cannot place block here!");
             e.setCancelled(true);
         }
-    }
+    }*/
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e){
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null){
-            Material blockType = e.getClickedBlock().getType();
-            String value = blockType.name();
-            boolean isBed = value.endsWith("_BED");
-            if(blockType == Material.CHEST || blockType == Material.TRAPPED_CHEST || isBed){
-                player = e.getPlayer();
-                location = e.getClickedBlock().getLocation();
-                query = regionContainer().createQuery();
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null) {
+            if (isBlockInRegion(e.getPlayer(), e.getClickedBlock().getLocation())) {
+                Material blockType = e.getClickedBlock().getType();
+//                String value = blockType.name();
+//                boolean isBed = value.endsWith("_BED");
 
-                ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(location));
-                for (ProtectedRegion region : regionSet){
-                    if(region.getOwners().contains(player.getUniqueId())){
-                        return;
+                if (!isBlockProtected(blockType) || blockType.name().endsWith("_BED")) {
+                    player = e.getPlayer();
+                    location = e.getClickedBlock().getLocation();
+                    query = regionContainer().createQuery();
+
+                    ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(location));
+                    for (ProtectedRegion region : regionSet) {
+                        if (region.getOwners().contains(player.getUniqueId())) {
+                            return;
+                        }
                     }
-                }
-                player.sendMessage(grey+ "You not owner of the camp!");
-                e.setCancelled(true);
-            }
-            if (e.getItem() != null && e.getItem().getType() == Material.LAVA_BUCKET) {
-                player = e.getPlayer();
-                location = e.getClickedBlock().getLocation();
-                query = regionContainer().createQuery();
-
-                if(!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.LAVA_FLOW)){
                     e.setCancelled(true);
+                    player.sendMessage(grey + "Sorry! You not an owner!");
+
+                }
+                if (e.getItem() != null && e.getItem().getType() == Material.LAVA_BUCKET) {
+                    player = e.getPlayer();
+                    location = e.getClickedBlock().getLocation();
+                    query = regionContainer().createQuery();
+
+                    if (!query.testState(BukkitAdapter.adapt(location), localPlayer, Flags.LAVA_FLOW)) {
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
@@ -118,7 +124,7 @@ public class BlockInteractionListener implements Listener {
             // Check if PVP is denied in the region
             if (isPlayerInRegion(attacker)&&!regionSet.testState(WorldGuardPlugin.inst().wrapPlayer(attacker), Flags.PVP)) {
                 event.setCancelled(true);
-                attacker.sendMessage(grey+ "You cannot harm entity inside this camp!");
+                attacker.sendMessage(grey+ "You cannot harm entity here!");
             }
         }
     }
@@ -137,7 +143,7 @@ public class BlockInteractionListener implements Listener {
             // Check if PVP or projectile use is denied in the region
             if (isPlayerInRegion(shooter) && !regionSet.testState(WorldGuardPlugin.inst().wrapPlayer(shooter), Flags.PVP)) {
                 event.setCancelled(true);
-                shooter.sendMessage(grey+ "You cannot use ranged weapons inside this camp!");
+                shooter.sendMessage(grey+ "You cannot use ranged weapons here!");
             }
         }
     }
@@ -183,6 +189,27 @@ public class BlockInteractionListener implements Listener {
             if (region.getId().equalsIgnoreCase(player.getName()+rgName)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean isBlockInRegion (Player player, Location location){
+
+        query = regionContainer().createQuery();
+
+        ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+        for (ProtectedRegion region : regionSet){
+            if (region.getId().equalsIgnoreCase(player.getName()+rgName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isBlockProtected(Material blockType){
+        for(Material mat : protectedBlocks){
+            if (mat == blockType) return true;
         }
         return false;
     }

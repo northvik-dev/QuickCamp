@@ -1,9 +1,11 @@
-package com.northvik.quickCamp.utils;
+package com.northvik.quickCamp.managers;
 
 import com.northvik.quickCamp.QuickCamp;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class ConfigsInitialize {
     List<Integer> slotIndex = new ArrayList<>();
     List<Integer> nonUsableSlotIndex = new ArrayList<>();
     HashMap<Integer,String> campBlueprint = new HashMap<>();
+    List<Material> goodsProtectionList = new ArrayList<>();
     Integer saveButton;
     Integer closeButton;
     Integer clearButton;
@@ -26,6 +29,8 @@ public class ConfigsInitialize {
 
     public ConfigsInitialize (QuickCamp plugin){
         this.plugin = plugin;
+        plugin.getConfig().options().copyDefaults();
+        plugin.saveDefaultConfig();
         loadFile();
         convertSlotsToInt();
     }
@@ -43,6 +48,7 @@ public class ConfigsInitialize {
     public void convertSlotsToInt (){
         List<String> slots =  config.getStringList("GUI-settings.placing-slots");
         List<String> nonUsableSlots =  config.getStringList("GUI-settings.non-usable");
+
         saveButton = config.getInt("GUI-settings.buttons.save");
         closeButton = config.getInt("GUI-settings.buttons.close");
         clearButton = config.getInt("GUI-settings.buttons.clear");
@@ -78,6 +84,16 @@ public class ConfigsInitialize {
                 }
             }
         }
+
+        //Get list of GoodsProtection
+        List<String> goodsProtection =  config.getStringList("GoodsProtection.");
+        if (config.getConfigurationSection("GoodsProtection")!= null) {
+            for (String name: goodsProtection){
+                goodsProtectionList.add(Material.valueOf(name));
+
+            }
+        }
+
     }
 
     //BUTTONS
@@ -116,6 +132,10 @@ public class ConfigsInitialize {
     }
     public HashMap<Integer,String> getCampBlueprint(){
         return campBlueprint;
+    }
+    //LISTS
+    public List<Material> getGoodsProtectionList(){
+        return goodsProtectionList;
     }
 
 

@@ -26,4 +26,14 @@ GUI-settings:
   - 32,33,34,35,
   - 41,42,43,
   - 45,46,47,48,49,50,51,52,
+# Protect blocks access from other players (NOT owner)
+GoodsProtection:
+  - BLAST_FURNACE
+  - FURNACE
+  - CHEST
+  - TRAPPED_CHEST
+  - BARREL
+  - ANVIL
+
+
 CampBlueprint:

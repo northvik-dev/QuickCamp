@@ -1,4 +1,4 @@
-package com.northvik.quickCamp.utils;
+package com.northvik.quickCamp.managers;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -61,15 +61,19 @@ public class ClaimHandler {
         RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world);
         ProtectedRegion region = regionManager.getRegion(regionName);
         if (region != null) {
+            //DENY
             region.setFlag(Flags.BUILD, StateFlag.State.DENY);
+            region.setFlag(Flags.BLOCK_BREAK, StateFlag.State.DENY);
             region.setFlag(Flags.PVP, StateFlag.State.DENY);
             region.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
-            region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.ALLOW);
             region.setFlag(Flags.OTHER_EXPLOSION, StateFlag.State.DENY);
             region.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
             region.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
-            region.setFlag(Flags.SLEEP, StateFlag.State.ALLOW);
             region.setFlag(Flags.LAVA_FLOW, StateFlag.State.DENY);
+            //ALLOW
+            region.setFlag(Flags.SLEEP, StateFlag.State.ALLOW);
+            region.setFlag(Flags.CHEST_ACCESS, StateFlag.State.ALLOW);
+            region.setFlag(Flags.INTERACT, StateFlag.State.ALLOW);
 
         }
     }

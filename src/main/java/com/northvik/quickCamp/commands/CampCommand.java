@@ -1,7 +1,7 @@
 package com.northvik.quickCamp.commands;
 
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.*;
+import com.northvik.quickCamp.managers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

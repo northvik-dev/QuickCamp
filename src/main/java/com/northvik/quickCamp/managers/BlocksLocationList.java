@@ -1,4 +1,4 @@
-package com.northvik.quickCamp.utils;
+package com.northvik.quickCamp.managers;
 
 import org.bukkit.Location;
 import org.bukkit.World;

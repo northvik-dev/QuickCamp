@@ -1,9 +1,9 @@
 package com.northvik.quickCamp.commands;
 
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.ClaimHandler;
-import com.northvik.quickCamp.utils.ConfigsInitialize;
-import com.northvik.quickCamp.utils.LocatedCampPDC;
+import com.northvik.quickCamp.managers.ClaimHandler;
+import com.northvik.quickCamp.managers.ConfigsInitialize;
+import com.northvik.quickCamp.managers.LocatedCampPDC;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

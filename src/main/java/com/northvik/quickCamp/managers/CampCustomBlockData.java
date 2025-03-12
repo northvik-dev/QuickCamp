@@ -1,4 +1,4 @@
-package com.northvik.quickCamp.utils;
+package com.northvik.quickCamp.managers;
 
 import com.jeff_media.customblockdata.CustomBlockData;
 import com.northvik.quickCamp.QuickCamp;
