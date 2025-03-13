@@ -7,7 +7,9 @@ import com.northvik.quickCamp.managers.LocatedCampPDC;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,15 @@ public class CampRemove {
 //                for (Location location : campCBD.expandClaim(loc.getBlock())){
 //                    campCBD.removeCustomBlockData(location.getBlock());
 //                }
+                if(loc.getBlock().getState() instanceof Chest){
+                    Chest chest = (Chest) loc.getBlock().getState();
+
+                    for(ItemStack item : chest.getInventory().getContents()){
+                        if(item != null){
+                            loc.getWorld().dropItemNaturally(loc, item);
+                        }
+                    }
+                }
 
                 loc.getBlock().setType(Material.AIR, false);
             }

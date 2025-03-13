@@ -52,7 +52,7 @@ public class CampCommand {
     public void setCamp(){
         HashMap<Integer, String> campBlueprint = new HashMap<>(ci.getCampBlueprint());
         List<Integer> placingArea = new ArrayList<>(ci.getSlotsIndexes());
-//        CampCustomBlockData campCBD = new CampCustomBlockData(plugin, player);
+//      CampCustomBlockData campCBD = new CampCustomBlockData(plugin, player);
         //Getting all slots from gui for indexing block placement on correct location
         for (int i = 0; i < placingArea.size(); i++) {
             for (var entry : campBlueprint.entrySet()) {
