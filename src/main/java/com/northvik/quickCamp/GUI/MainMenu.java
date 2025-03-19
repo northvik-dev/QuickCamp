@@ -4,6 +4,7 @@ import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.ConfigsInitialize;
 import com.northvik.quickCamp.utils.GuiButtonIndexes;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -23,18 +24,18 @@ public class MainMenu {
         //Create new template button
         ItemStack createCamp = new ItemStack(Material.CAMPFIRE);
         ItemMeta createCampMeta = createCamp.getItemMeta();
-        createCampMeta.setDisplayName("Create new camp template");
+        createCampMeta.setDisplayName(ChatColor.GRAY + "Create new camp template");
         createCamp.setItemMeta(createCampMeta);
 
         //Saved templates list
         ItemStack savedTemplatesMenu = new ItemStack(Material.CHEST);
         ItemMeta savedTemplatesMenuMeta = savedTemplatesMenu.getItemMeta();
-        savedTemplatesMenuMeta.setDisplayName("Load Templates");
+        savedTemplatesMenuMeta.setDisplayName(ChatColor.GRAY + "Load Templates");
         savedTemplatesMenu.setItemMeta(savedTemplatesMenuMeta);
         // Close button
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
-        closeButtonMeta.setDisplayName("Close");
+        closeButtonMeta.setDisplayName(ChatColor.GRAY + "Close");
         closeButton.setItemMeta(closeButtonMeta);
 
         for (int i = 0; i < menu.getSize() ; i++) {

@@ -35,14 +35,10 @@ public class CampPlace {
         Location pos2 = player.getLocation().clone().add(bll.getMax()-1,3,bll.getMin());
         ClaimHandler claimHandler = new ClaimHandler();
 
-        player.sendMessage(bll.getMin() + " " + bll.getMax());
-
         if (!locatedCampPDC.isCamping()){
             if (safeCheck.isSafe()) {
                 if(claimHandler.claimLand(player,pos1,pos2)) {
                     claimHandler.setRegionFlags(player);
-
-
                     setCamp(templateName);
                     locatedCampPDC.setCamp();
                     player.sendMessage(ChatColor.GREEN + "You have set camp at: " + locatedCampPDC.getCampLocation());
@@ -57,12 +53,7 @@ public class CampPlace {
     public void setCamp(String templateName){
         gcs.convertSlotsToInt(ci.getCampTemplateSize(templateName));
         HashMap<Integer, String> campBlueprint = new HashMap<>(ci.getCampTemplate(templateName));
-        player.sendMessage(campBlueprint.toString());
-
-
         List<Integer> placingArea = new ArrayList<>(gcs.getInputSlotsIndexes());
-        player.sendMessage(placingArea.toString());
-
         //Getting all slots from gui for indexing block placement on correct location
         for (int i = 0; i < placingArea.size(); i++) {
             for (var entry : campBlueprint.entrySet()) {
