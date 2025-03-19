@@ -14,7 +14,6 @@ public final class QuickCamp extends JavaPlugin implements Listener {
     public void onEnable() {
         main = this;
 
-
         getCommand("camp").setExecutor(new CommandHandler(this));
         Bukkit.getPluginManager().registerEvents(new GuiMenuListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BlockInteractionListener(this), this);

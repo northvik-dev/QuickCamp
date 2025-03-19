@@ -47,40 +47,12 @@ public class BlockInteractionListener implements Listener {
         this.playerCamp = ci.getCampLocationConfig();
         this.protectedBlocks = ci.getGoodsProtectionList();
     }
-    //Found this part unnecessary at the moment as WorldGuard cancel place/break by default.
-    //Will leave it until would be fully sure.
-    /*@EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
-        player = e.getPlayer();
-        localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-        query = regionContainer().createQuery();
-
-        location = e.getBlock().getLocation();
-        if(isBlockInRegion(player, e.getBlock().getLocation())&&!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BLOCK_BREAK)){
-            //player.sendMessage(grey+ "You cannot break block here!");
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e){
-        player = e.getPlayer();
-        localPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-        query = regionContainer().createQuery();
-        location = e.getBlock().getLocation();
-        if(isBlockInRegion(player, e.getBlock().getLocation())&&!query.testState(BukkitAdapter.adapt(location),localPlayer, Flags.BUILD)){
-            //player.sendMessage(grey+ "You cannot place block here!");
-            e.setCancelled(true);
-        }
-    }*/
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e){
         if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock() != null) {
             if (isBlockInRegion(e.getPlayer(), e.getClickedBlock().getLocation())) {
                 Material blockType = e.getClickedBlock().getType();
-//                String value = blockType.name();
-//                boolean isBed = value.endsWith("_BED");
 
                 if (!isBlockProtected(blockType) || blockType.name().endsWith("_BED")) {
                     player = e.getPlayer();
@@ -152,7 +124,6 @@ public class BlockInteractionListener implements Listener {
     public void onReceivingDamage(DamageEntityEvent e){
         if(e.getEntity() instanceof Player damagedPlayer){
             Location playerLocation = damagedPlayer.getLocation();
-
             query = regionContainer().createQuery();
             ApplicableRegionSet regionSet = query.getApplicableRegions(BukkitAdapter.adapt(playerLocation));
 

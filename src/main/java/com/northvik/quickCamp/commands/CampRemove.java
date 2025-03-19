@@ -19,30 +19,28 @@ public class CampRemove {
     Location camplocation;
     QuickCamp plugin;
     ConfigsInitialize ci;
+
     public CampRemove(Player player, Location camplocation, QuickCamp plugin, ConfigsInitialize ci){
         this.player = player;
         this.camplocation = camplocation;
         this.plugin = plugin;
         this.ci = ci;
     }
-    public void removeCamp(){
 
+    public void removeCamp(){
         String path = player.getUniqueId().toString();
         LocatedCampPDC lc = new LocatedCampPDC(player,camplocation,plugin);
-//        CampCustomBlockData campCBD = new CampCustomBlockData(plugin, player);
         ClaimHandler claimHandler = new ClaimHandler();
         List<Map<?,?>> locationList = ci.getCampLocationConfig().getMapList(path);
-
+        lc.removeCamping();
         if (locationList.isEmpty()){
+
             player.sendMessage(ChatColor.RED + "You don't have any camp to remove!");
         }else {
 
             for (Map<?, ?> map : locationList) {
                 Location loc = Location.deserialize((Map<String, Object>) map);
 
-//                for (Location location : campCBD.expandClaim(loc.getBlock())){
-//                    campCBD.removeCustomBlockData(location.getBlock());
-//                }
                 if(loc.getBlock().getState() instanceof Chest){
                     Chest chest = (Chest) loc.getBlock().getState();
 
@@ -55,10 +53,9 @@ public class CampRemove {
 
                 loc.getBlock().setType(Material.AIR, false);
             }
-
             ci.getCampLocationConfig().set(path, null);
             ci.saveConfig(ci.getCampLocationConfig(), ci.getLocationFile());
-            lc.removeCamping();
+
             claimHandler.removeClaim(player);
 
             player.sendMessage(ChatColor.GREEN + "Your camp been removed!");
