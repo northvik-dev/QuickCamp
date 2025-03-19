@@ -1,7 +1,7 @@
 package com.northvik.quickCamp.commands;
 
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.*;
+import com.northvik.quickCamp.managers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,33 +12,38 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CampCommand {
+public class CampPlace {
+
     Player player;
     QuickCamp plugin;
     BlocksLocationList bll = new BlocksLocationList();
     ConfigsInitialize ci;
-    LocatedCampPDC lc;
-    public CampCommand(Player player, QuickCamp plugin, ConfigsInitialize ci){
+    GuiCustomSize gcs = new GuiCustomSize();
+    public CampPlace(Player player, QuickCamp plugin, ConfigsInitialize ci){
         this.player = player;
         this.plugin = plugin;
         this.ci = ci;
     }
 
-    public void campPlace(){
+    public void campPlace(String templateName){
         SafeCheck safeCheck = new SafeCheck();
-        bll.blockLocations(player);
+        bll.blockLocations(player, plugin, ci.getCampTemplateSize(templateName));
         LocatedCampPDC locatedCampPDC = new LocatedCampPDC(player, bll.getCampLocation(), plugin);
         safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList(), player);
 
-        Location pos1 = player.getLocation().clone().add(-3,-1,3);
-        Location pos2 = player.getLocation().clone().add(3,3,-3);
+        Location pos1 = player.getLocation().clone().add(bll.getMin(),-1,bll.getMax()-1);
+        Location pos2 = player.getLocation().clone().add(bll.getMax()-1,3,bll.getMin());
         ClaimHandler claimHandler = new ClaimHandler();
+
+        player.sendMessage(bll.getMin() + " " + bll.getMax());
 
         if (!locatedCampPDC.isCamping()){
             if (safeCheck.isSafe()) {
                 if(claimHandler.claimLand(player,pos1,pos2)) {
                     claimHandler.setRegionFlags(player);
-                    setCamp();
+
+
+                    setCamp(templateName);
                     locatedCampPDC.setCamp();
                     player.sendMessage(ChatColor.GREEN + "You have set camp at: " + locatedCampPDC.getCampLocation());
                 }
@@ -49,10 +54,15 @@ public class CampCommand {
             player.sendMessage(ChatColor.RED + "You cannot place more than one camp!");
         }
     }
-    public void setCamp(){
-        HashMap<Integer, String> campBlueprint = new HashMap<>(ci.getCampBlueprint());
-        List<Integer> placingArea = new ArrayList<>(ci.getSlotsIndexes());
-//        CampCustomBlockData campCBD = new CampCustomBlockData(plugin, player);
+    public void setCamp(String templateName){
+        gcs.convertSlotsToInt(ci.getCampTemplateSize(templateName));
+        HashMap<Integer, String> campBlueprint = new HashMap<>(ci.getCampTemplate(templateName));
+        player.sendMessage(campBlueprint.toString());
+
+
+        List<Integer> placingArea = new ArrayList<>(gcs.getInputSlotsIndexes());
+        player.sendMessage(placingArea.toString());
+
         //Getting all slots from gui for indexing block placement on correct location
         for (int i = 0; i < placingArea.size(); i++) {
             for (var entry : campBlueprint.entrySet()) {
@@ -76,16 +86,8 @@ public class CampCommand {
                         footBedData.setFacing(BlockFace.WEST);
                         footBedBlock.setBlockData(footBedData);
 
-//                        campCBD.setCustomBlockData(block);
-//                        campCBD.setCustomBlockData(footBedBlock);
-
-
                     } else {
                         block.setType(mat);
-//
-//                        for (Location location: campCBD.expandClaim(block)){
-//                            campCBD.setCustomBlockData(location.getBlock());
-//                        }
                     }
                 }
             }
@@ -95,9 +97,7 @@ public class CampCommand {
 
 ///// Camp area blocks location to configs
     public void addPlayerCampLocation(){
-
         String path = player.getUniqueId().toString();
-
         List<Map<String,Object>> blockLocations = new ArrayList<>();
 
         for(Location block : bll.getPlacingAreaList()){
@@ -107,6 +107,4 @@ public class CampCommand {
         ci.getCampLocationConfig().set(path, blockLocations);
         ci.saveConfig(ci.getCampLocationConfig(),ci.getLocationFile());
     }
-
-
 }

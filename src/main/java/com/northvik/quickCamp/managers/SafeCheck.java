@@ -1,4 +1,4 @@
-package com.northvik.quickCamp.utils;
+package com.northvik.quickCamp.managers;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
