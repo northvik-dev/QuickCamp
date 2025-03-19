@@ -22,12 +22,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
                             <shadedPattern>com.northvik</shadedPattern>
                         </relocation>
                     </relocations>
@@ -53,7 +52,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.1.0</version>  <!-- This is the latest stable version -->
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -62,7 +61,6 @@
                         </goals>
                         <configuration>
                             <target>
-                                <!-- Copy JAR file to the server plugins directory -->
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       todir="${env.PLUGIN_DIR}"/>
                             </target>
@@ -112,7 +110,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.2</version>
+            <version>3.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

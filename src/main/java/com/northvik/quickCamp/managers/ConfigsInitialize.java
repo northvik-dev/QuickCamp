@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class ConfigsInitialize {
@@ -38,9 +39,25 @@ public class ConfigsInitialize {
     public void loadFile(){
         file = new File(plugin.getPlugin().getDataFolder(), "config.yml");
         locationFile = new File(plugin.getPlugin().getDataFolder(), "camps.yml");
-        if (!file.exists() || !locationFile.exists()){
-            plugin.getServer().getConsoleSender().sendMessage("Config file doesn't exist!");
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+                plugin.getLogger().info("config.yml created successfully!");
+            } catch (IOException e) {
+                plugin.getLogger().info("Unable to create config.yml");
+                throw new RuntimeException(e);
+            }
         }
+        if (!locationFile.exists()){
+            try {
+                locationFile.createNewFile();
+                plugin.getLogger().info("camps.yml created successfully!");
+            } catch (IOException e) {
+                plugin.getLogger().info("Unable to create camps.yml");
+                throw new RuntimeException(e);
+            }
+        }
+
         campLocationConfig = YamlConfiguration.loadConfiguration(locationFile);
         config = YamlConfiguration.loadConfiguration(file);
     }

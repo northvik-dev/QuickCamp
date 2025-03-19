@@ -4,6 +4,7 @@ import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.ConfigsInitialize;
 import com.northvik.quickCamp.utils.GuiButtonIndexes;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Item;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SavedTemplatesMenu {
@@ -30,7 +32,7 @@ public class SavedTemplatesMenu {
         // Back button
         ItemStack backButton = new ItemStack(Material.BARRIER);
         ItemMeta backButtonMeta = backButton.getItemMeta();
-        backButtonMeta.setDisplayName("Back");
+        backButtonMeta.setDisplayName(ChatColor.GRAY + "Back");
         backButton.setItemMeta(backButtonMeta);
 
 
@@ -49,7 +51,13 @@ public class SavedTemplatesMenu {
             ItemStack template = new ItemStack(Material.CAMPFIRE);
             if (name != null){
                 ItemMeta templateMeta = template.getItemMeta();
-                templateMeta.setDisplayName(name);
+                templateMeta.setDisplayName(ChatColor.GRAY + name);
+                templateMeta.setLore(Arrays.asList(
+                        ChatColor.GRAY + "-----",
+                       ChatColor.GRAY + "Camp size: " + configSizeToLore(ci.getCampTemplateSize(name)),
+                        "",
+                        ChatColor.YELLOW + (ChatColor.ITALIC + "Click to edit.")
+                ));
                 template.setItemMeta(templateMeta);
             }
             menu.setItem(9+i, template);
@@ -59,6 +67,22 @@ public class SavedTemplatesMenu {
 
     }
 
-
-
+    public String configSizeToLore (int campSize){
+            String sizeLore = "";
+        switch (campSize){
+            case 1: {
+                sizeLore = "3x3";
+            }break;
+            case 2: {
+                sizeLore = "4x4";
+            }break;
+            case 3: {
+                sizeLore = "5x5";
+            }break;
+            case 4: {
+                sizeLore = "6x6";
+            }
+        }
+            return sizeLore;
+    }
 }

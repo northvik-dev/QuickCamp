@@ -38,29 +38,31 @@ public class TemplateMenu {
         // Save button
         ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
         ItemMeta saveButtonMeta = saveButton.getItemMeta();
-        saveButtonMeta.setDisplayName("Save setup");
+        saveButtonMeta.setDisplayName(ChatColor.GREEN + "Save");
         saveButton.setItemMeta(saveButtonMeta);
 
         // Close button
-        ItemStack closeButton = getCustomSkull("27548362a24c0fa8453e4d93e68c5969ddbde57bf6666c0319c1ed1e84d89065");
+        ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
-        closeButtonMeta.setDisplayName("Close");
+        closeButtonMeta.setDisplayName(ChatColor.GRAY + "Back");
         closeButton.setItemMeta(closeButtonMeta);
 
         //Clear button
         ItemStack clearButton = getCustomSkull("cb067ae612d5256a24ccfc74c11814f01962b4d81817a618134b45f36fe6fcb3");
         ItemMeta clearButtonMeta = clearButton.getItemMeta();
-        clearButtonMeta.setDisplayName("Clear");
+        clearButtonMeta.setDisplayName(ChatColor.YELLOW + "Delete");
         clearButton.setItemMeta(clearButtonMeta);
 
         //Info button
         ItemStack infoButton = getCustomSkull("2705fd94a0c431927fb4e639b0fcfb49717e412285a02b439e0112da22b2e2ec");
         ItemMeta infoButtonMeta = infoButton.getItemMeta();
-        infoButtonMeta.setDisplayName("Info");
+        infoButtonMeta.setDisplayName(ChatColor.GRAY + (ChatColor.BOLD + "Info"));
         infoButtonMeta.setLore(Arrays.asList(
-                ChatColor.GRAY + "Use Clear button to clear blueprint configs table.",
-                ChatColor.GRAY + "Use Save button to save blueprint to config file.",
-                ChatColor.GRAY + "Use Close button to close menu without saving."));
+                ChatColor.YELLOW + "Delete button:",
+                ChatColor.GRAY + " - clear blueprint configs and table.",
+                ChatColor.GREEN + "Save button:",
+                ChatColor.GRAY + " - save template and blueprint to config file."
+                ));
         infoButton.setItemMeta(infoButtonMeta);
 
         //Camp size button
@@ -97,7 +99,7 @@ public class TemplateMenu {
     public ItemStack getSizeButton(int choiceSize){
         ItemStack sizeButton = new ItemStack(Material.CRAFTING_TABLE);
         ItemMeta sizeButtonItemMeta = sizeButton.getItemMeta();
-        sizeButtonItemMeta.setDisplayName("Set Size");
+        sizeButtonItemMeta.setDisplayName(ChatColor.WHITE + "Choose Camp Size");
         switch (choiceSize){
             case 1: {
                 sizeButtonItemMeta.setLore(Arrays.asList(

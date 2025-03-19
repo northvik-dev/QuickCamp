@@ -69,7 +69,6 @@ public class CommandHandler implements CommandExecutor {
                     }
                 }
             }
-            player.sendMessage("camp size " + campSize);
             bll.blockLocations(player, plugin, campSize );
         }
         return false;

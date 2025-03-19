@@ -7,6 +7,7 @@ import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.ConfigsInitialize;
 import com.northvik.quickCamp.managers.GuiCustomSize;
 import com.northvik.quickCamp.utils.GuiButtonIndexes;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,10 +49,7 @@ public class GuiMenuListener implements Listener {
         if (e.getView().getTitle().equals("Template Editor")) {
 
             gcs.convertSlotsToInt(choiceSize);
-
             List<Integer> nonUsableSlots = new ArrayList<>(gcs.getNonUsableSlotsIndexes());
-            Bukkit.getConsoleSender().sendMessage("nonUsableSlots " + nonUsableSlots);
-
             e.getInventory().setItem(gbi.getSizeButton(), templateMenu.getSizeButton(choiceSize));
 
             for (Integer slot : nonUsableSlots) {
@@ -95,7 +93,7 @@ public class GuiMenuListener implements Listener {
             for (int i = 0; i < e.getInventory().getSize(); i++){
                 if (e.getClick().isMouseClick() && e.getRawSlot()==i ){
                     if( i >= 9 && i <=44 && e.getCurrentItem()!= null){
-                        campName = e.getCurrentItem().getItemMeta().getDisplayName();
+                        campName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
                         choiceSize = ci.getCampTemplateSize(campName);
                         templateMenu.menu(player);
                         templateMenu.loadTemplate(campName);
@@ -111,8 +109,6 @@ public class GuiMenuListener implements Listener {
         if (e.getView().getTitle().equals("Template Editor")){
 
             List<Integer> nonUsableSlots = new ArrayList<>(gcs.getNonUsableSlotsIndexes());
-            Bukkit.getConsoleSender().sendMessage("nonUsableSlots " + nonUsableSlots);
-
             for (Integer slot : nonUsableSlots){
                 if (e.getClick().isMouseClick() && e.getRawSlot()==slot ){
                     e.setCancelled(true);
@@ -143,7 +139,7 @@ public class GuiMenuListener implements Listener {
            if (e.getRawSlot()== gbi.getSaveButton()){
                config.set("CampBlueprint."+campName, null);
                saveBlueprint(ci, config, file, e.getInventory());
-               player.sendMessage("Blueprint is saved into configs!");
+               player.sendMessage( ChatColor.GRAY + (ChatColor.ITALIC + "Template is saved into configs!"));
                e.setCancelled(true);
            }
 
@@ -177,7 +173,7 @@ public class GuiMenuListener implements Listener {
             campName = e.getMessage();
 
             if (campName.equalsIgnoreCase("cancel")) {
-                player.sendMessage("Input cancelled.");
+                player.sendMessage(ChatColor.GRAY + (ChatColor.ITALIC + "Input cancelled."));
             } else {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     ci.getTemplateNames().add(campName.toLowerCase());
@@ -190,7 +186,8 @@ public class GuiMenuListener implements Listener {
 
     }
     public void startChat (Player player){
-        player.sendMessage("Please enter a name for a new camp:");
+        player.sendMessage(ChatColor.DARK_GREEN + (ChatColor.BOLD + "Please enter a name for a new camp:"));
+        player.sendMessage(ChatColor.GRAY + ("Or type \"cancel\" for cancel this event. "));
         waitingForInput.put(player, true);
     }
     //END CHAT
