@@ -6,6 +6,7 @@ import com.northvik.quickCamp.GUI.TemplateMenu;
 import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.ConfigsInitialize;
 import com.northvik.quickCamp.managers.GuiCustomSize;
+import com.northvik.quickCamp.managers.LinkItem;
 import com.northvik.quickCamp.utils.GuiButtonIndexes;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -21,11 +22,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class GuiMenuListener implements Listener {
 
@@ -35,9 +38,11 @@ public class GuiMenuListener implements Listener {
     SavedTemplatesMenu savedTemplatesMenu = new SavedTemplatesMenu();
     MainMenu mainMenu = new MainMenu();
     String campName;
+    LinkItem linkItem;
     public GuiMenuListener(QuickCamp plugin){
         this.plugin = plugin;
         this.templateMenu = new TemplateMenu(plugin);
+        this.linkItem = new LinkItem(plugin);
     }
     int choiceSize = 1;
 
@@ -132,9 +137,22 @@ public class GuiMenuListener implements Listener {
                 templateMenu.menu(player);
                 e.setCancelled(true);
             }
-            //non usable slots area
+            //LINK ITEM BUTTON
+            if(e.getRawSlot() == gbi.getItemLinkButton()){
 
+                if (isSlotEmpty(e.getInventory(),gbi.getItemLinkSlot())){
+                    player.sendMessage("You cannot link camp to empty slot");
+                } else{
+                    ItemStack item = e.getInventory().getItem(gbi.getItemLinkSlot());
+                    linkItem.getLinkedItem(item, campName);
+                }
+                e.setCancelled(true);
+            }
 
+            //LINK ITEM SLOT
+            if(e.getRawSlot() == gbi.getItemLinkSlot()){
+
+            }
            //save button function
            if (e.getRawSlot()== gbi.getSaveButton()){
                config.set("CampBlueprint."+campName, null);
@@ -143,20 +161,20 @@ public class GuiMenuListener implements Listener {
                e.setCancelled(true);
            }
 
-           // close button function
+           // CLOSE button function
            if (e.getRawSlot()== gbi.getCloseButton()){
-               mainMenu.menu(player, plugin);
+               savedTemplatesMenu.menu(player, plugin);
                e.setCancelled(true);
-               choiceSize = 1;
            }
-            // clear button function
+            // DELETE button function
             if (e.getRawSlot()== gbi.getClearButton()){
                 clearSlots(e.getInventory());
                 config.set("CampBlueprint."+campName, null);
                 ci.saveConfig(config,file);
+                savedTemplatesMenu.menu(player,plugin);
                 e.setCancelled(true);
             }
-            // info button function
+            // INFO button function
             if (e.getRawSlot()== gbi.getInfoButton()){
                 e.setCancelled(true);
             }
@@ -186,8 +204,9 @@ public class GuiMenuListener implements Listener {
 
     }
     public void startChat (Player player){
-        player.sendMessage(ChatColor.DARK_GREEN + (ChatColor.BOLD + "Please enter a name for a new camp:"));
-        player.sendMessage(ChatColor.GRAY + ("Or type \"cancel\" for cancel this event. "));
+        player.sendMessage(ChatColor.DARK_GREEN + (ChatColor.BOLD + "Please enter a name for a new template."));
+        player.sendMessage(ChatColor.YELLOW + (ChatColor.BOLD + "Note: template name should be one string without space!"));
+        player.sendMessage(ChatColor.GRAY + ("Or type \"cancel\" for cancel this event: "));
         waitingForInput.put(player, true);
     }
     //END CHAT

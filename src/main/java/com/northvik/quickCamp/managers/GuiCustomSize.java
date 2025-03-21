@@ -37,19 +37,17 @@ public class GuiCustomSize {
         }
         //CREATE NON_USABLE SLOTS
         Iterator<Integer> iterator = allParsedIntSlots.iterator();
+        int [] buttonsIndex = gbi.buttonsIndexList();
         while (iterator.hasNext()) {
             Integer slot = iterator.next();
             boolean isNonUsable = false;
 
             for (Integer x : inputSlotsIndexes) {
-                if (slot.equals(x) ||
-                        slot.equals(gbi.getSaveButton()) ||
-                        slot.equals(gbi.getClearButton())||
-                        slot.equals(gbi.getInfoButton()) ||
-                        slot.equals(gbi.getCloseButton())||
-                        slot.equals(gbi.getSizeButton())) {
-                    isNonUsable = true;
-                    break;
+                for (int i : buttonsIndex ) {
+                    if (slot.equals(x) || slot.equals(i) ) {
+                        isNonUsable = true;
+                        break;
+                    }
                 }
             }if (isNonUsable) {
                 iterator.remove();

@@ -35,17 +35,24 @@ public class TemplateMenu {
         getInventory(player);
         GuiButtonIndexes gbi = new GuiButtonIndexes();
 
-        // Save button
-        ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
-        ItemMeta saveButtonMeta = saveButton.getItemMeta();
-        saveButtonMeta.setDisplayName(ChatColor.GREEN + "Save");
-        saveButton.setItemMeta(saveButtonMeta);
 
         // Close button
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
         closeButtonMeta.setDisplayName(ChatColor.GRAY + "Back");
         closeButton.setItemMeta(closeButtonMeta);
+
+        // Close button
+        ItemStack itemLinkButton = new ItemStack(Material.FLINT_AND_STEEL);
+        ItemMeta itemLinkButtonMeta = itemLinkButton.getItemMeta();
+        itemLinkButtonMeta.setDisplayName(ChatColor.GRAY + "Link item");
+        itemLinkButton.setItemMeta(itemLinkButtonMeta);
+
+        // Save button
+        ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
+        ItemMeta saveButtonMeta = saveButton.getItemMeta();
+        saveButtonMeta.setDisplayName(ChatColor.GREEN + "Save");
+        saveButton.setItemMeta(saveButtonMeta);
 
         //Clear button
         ItemStack clearButton = getCustomSkull("cb067ae612d5256a24ccfc74c11814f01962b4d81817a618134b45f36fe6fcb3");
@@ -73,6 +80,7 @@ public class TemplateMenu {
         campGui.setItem(gbi.getClearButton(), clearButton);
         campGui.setItem(gbi.getInfoButton(), infoButton);
         campGui.setItem(gbi.getSizeButton(), sizeButton);
+        campGui.setItem(gbi.getItemLinkButton(), itemLinkButton);
         player.openInventory(campGui);
     }
 

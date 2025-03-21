@@ -14,6 +14,7 @@ public class GuiButtonIndexes {
                     "45,46,47,48,49,50,51,52,53"
             ));
 
+
     int closeButton = 8;
     //MAIN MENU
     int createTemplate = 21;
@@ -25,7 +26,21 @@ public class GuiButtonIndexes {
     int clearButton = 52;
     int infoButton = 53;
 
+    int itemLinkSlot = 25;
 
+    int itemLinkButton = 26;
+    int[] buttonsIndex = {8,44,51,52,53,25,26};
+
+    public int[] buttonsIndexList(){
+        return buttonsIndex;
+    }
+    public int getItemLinkSlot() {
+        return itemLinkSlot;
+    }
+
+    public int getItemLinkButton() {
+        return itemLinkButton;
+    }
     public List<String> getInventorySlots() {
         return inventorySlots;
     }
