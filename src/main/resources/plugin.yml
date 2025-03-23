@@ -19,3 +19,9 @@ permissions:
   quickcamp.camp.gui:
     description: Grants access to /camp gui
     default: op
+  quickcamp.camp.place:
+    description: Grants access to /camp place
+    default: op
+  quickcamp.camp.help:
+    description: Grants access to /camp help
+    default: op

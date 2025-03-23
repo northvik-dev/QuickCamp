@@ -22,6 +22,7 @@ import java.util.*;
 public class TemplateMenu {
     QuickCamp plugin;
     int choiceSize;
+    GuiButtonIndexes gbi;
 
     public void setChoiceSize(int choiceSize) {
         this.choiceSize = choiceSize;
@@ -29,11 +30,11 @@ public class TemplateMenu {
 
     public TemplateMenu(QuickCamp plugin){
         this.plugin = plugin;
+        this.gbi = new GuiButtonIndexes();
     }
     Inventory campGui;
     public void menu(Player player) {
         getInventory(player);
-        GuiButtonIndexes gbi = new GuiButtonIndexes();
 
 
         // Close button
@@ -65,11 +66,10 @@ public class TemplateMenu {
         ItemMeta infoButtonMeta = infoButton.getItemMeta();
         infoButtonMeta.setDisplayName(ChatColor.GRAY + (ChatColor.BOLD + "Info"));
         infoButtonMeta.setLore(Arrays.asList(
-                ChatColor.YELLOW + "Delete button:",
-                ChatColor.GRAY + " - clear blueprint configs and table.",
-                ChatColor.GREEN + "Save button:",
-                ChatColor.GRAY + " - save template and blueprint to config file."
-                ));
+                ChatColor.GRAY+ "Click to get links:",
+                ChatColor.BLUE + "- Documentation",
+                ChatColor.BLUE + "- Discord"
+        ));
         infoButton.setItemMeta(infoButtonMeta);
 
         //Camp size button
@@ -94,6 +94,8 @@ public class TemplateMenu {
             ItemStack item = new ItemStack(Material.valueOf(matString));
             campGui.setItem(entry.getKey(), item);
         }
+            campGui.setItem(gbi.getItemLinkSlot(),ci.getLinkedItem(templateName));
+
     }
     ////non usable area
     public ItemStack getNonUsableItem(){

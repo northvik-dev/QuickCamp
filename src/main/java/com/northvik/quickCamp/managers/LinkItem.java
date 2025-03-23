@@ -20,7 +20,7 @@ public class LinkItem {
             ItemMeta itemMeta = item.getItemMeta();
             if(itemMeta != null) {
                 PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-                pdc.set(new NamespacedKey(plugin, campName), PersistentDataType.BOOLEAN, true);
+                pdc.set(new NamespacedKey(plugin, "camp"), PersistentDataType.STRING, campName);
                 item.setItemMeta(itemMeta);
 
             }

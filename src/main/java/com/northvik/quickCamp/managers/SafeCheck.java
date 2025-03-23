@@ -36,7 +36,8 @@ public class SafeCheck {
         }
         for (Location location : place) {
             Material type = location.getBlock().getType();
-            if (isProtected(location, player) || (type.isBlock() && !type.isAir())) {
+            if (isProtected(location, player) || type.isSolid()|| type.equals(Material.WATER)
+                    || type.equals(Material.LAVA) || type.equals(Material.ICE)) {
                 isAreaSafe = false;
                 break;
             } else {

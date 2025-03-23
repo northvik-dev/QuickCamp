@@ -9,26 +9,26 @@ import com.northvik.quickCamp.managers.GuiCustomSize;
 import com.northvik.quickCamp.managers.LinkItem;
 import com.northvik.quickCamp.utils.GuiButtonIndexes;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class GuiMenuListener implements Listener {
 
@@ -37,7 +37,7 @@ public class GuiMenuListener implements Listener {
     TemplateMenu templateMenu;
     SavedTemplatesMenu savedTemplatesMenu = new SavedTemplatesMenu();
     MainMenu mainMenu = new MainMenu();
-    String campName;
+    String templateName;
     LinkItem linkItem;
     public GuiMenuListener(QuickCamp plugin){
         this.plugin = plugin;
@@ -68,8 +68,10 @@ public class GuiMenuListener implements Listener {
 
         Player player = (Player) e.getWhoClicked();
         ConfigsInitialize ci = new ConfigsInitialize(plugin);
-        YamlConfiguration config = ci.getYmlConfig();
-        File file = ci.getFile();
+        YamlConfiguration mainConfig = ci.getMainConfig();
+        YamlConfiguration templatesConfig = ci.getTemplatesConfig();
+        File mainFile = ci.getMainConfigFile();
+        File templatesFile = ci.getTemplatesFile();
 
 
 //// MAIN MENU
@@ -98,10 +100,10 @@ public class GuiMenuListener implements Listener {
             for (int i = 0; i < e.getInventory().getSize(); i++){
                 if (e.getClick().isMouseClick() && e.getRawSlot()==i ){
                     if( i >= 9 && i <=44 && e.getCurrentItem()!= null){
-                        campName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                        choiceSize = ci.getCampTemplateSize(campName);
+                        templateName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+                        choiceSize = ci.getCampTemplateSize(templateName);
                         templateMenu.menu(player);
-                        templateMenu.loadTemplate(campName);
+                        templateMenu.loadTemplate(templateName);
                     }
                     e.setCancelled(true);
                 }
@@ -141,10 +143,11 @@ public class GuiMenuListener implements Listener {
             if(e.getRawSlot() == gbi.getItemLinkButton()){
 
                 if (isSlotEmpty(e.getInventory(),gbi.getItemLinkSlot())){
-                    player.sendMessage("You cannot link camp to empty slot");
+                    player.sendMessage(ChatColor.GRAY + "You cannot link camp to empty slot");
                 } else{
                     ItemStack item = e.getInventory().getItem(gbi.getItemLinkSlot());
-                    linkItem.getLinkedItem(item, campName);
+                    saveLinkedItem(ci, ci.getMainConfig(), ci.getMainConfigFile(),linkItem.getLinkedItem(item, templateName));
+
                 }
                 e.setCancelled(true);
             }
@@ -155,8 +158,8 @@ public class GuiMenuListener implements Listener {
             }
            //save button function
            if (e.getRawSlot()== gbi.getSaveButton()){
-               config.set("CampBlueprint."+campName, null);
-               saveBlueprint(ci, config, file, e.getInventory());
+               templatesConfig.set("CampBlueprint."+ templateName, null);
+               saveTemplate(ci, templatesConfig, templatesFile, e.getInventory());
                player.sendMessage( ChatColor.GRAY + (ChatColor.ITALIC + "Template is saved into configs!"));
                e.setCancelled(true);
            }
@@ -169,13 +172,30 @@ public class GuiMenuListener implements Listener {
             // DELETE button function
             if (e.getRawSlot()== gbi.getClearButton()){
                 clearSlots(e.getInventory());
-                config.set("CampBlueprint."+campName, null);
-                ci.saveConfig(config,file);
+
+                templatesConfig.set("CampBlueprint."+ templateName, null);
+                mainConfig.set("LinkedItems."+ templateName,null);
+                ci.saveConfig(mainConfig,mainFile);
+                ci.saveConfig(templatesConfig,templatesFile);
                 savedTemplatesMenu.menu(player,plugin);
                 e.setCancelled(true);
             }
             // INFO button function
             if (e.getRawSlot()== gbi.getInfoButton()){
+                TextComponent start = new TextComponent(org.bukkit.ChatColor.GREEN +"\n----------------------------------");
+                TextComponent msg = new TextComponent(org.bukkit.ChatColor.LIGHT_PURPLE + "\n Have question or need help?");
+                TextComponent end = new TextComponent(org.bukkit.ChatColor.GREEN +"\n----------------------------------");
+                TextComponent discord = new TextComponent(org.bukkit.ChatColor.AQUA+"\n --> Click to join our Discord <--");
+                discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/jT8X9faerT"));
+                discord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://discord.gg/jT8X9faerT")));
+                TextComponent documentation = new TextComponent(org.bukkit.ChatColor.BLUE+"\n --> Open documentation <--");
+                documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/northvik-dev/QuickCamp/wiki"));
+                documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://github.com/northvik-dev/QuickCamp/wiki")));
+                start.addExtra(msg);
+                start.addExtra(discord);
+                start.addExtra(documentation);
+                start.addExtra(end);
+                player.spigot().sendMessage(start);
                 e.setCancelled(true);
             }
 
@@ -188,13 +208,13 @@ public class GuiMenuListener implements Listener {
         ConfigsInitialize ci = new ConfigsInitialize(plugin);
         if (waitingForInput.getOrDefault(player, false)) {
             e.setCancelled(true); // Prevent the message from being sent to public chat
-            campName = e.getMessage();
+            templateName = e.getMessage();
 
-            if (campName.equalsIgnoreCase("cancel")) {
+            if (templateName.equalsIgnoreCase("cancel")) {
                 player.sendMessage(ChatColor.GRAY + (ChatColor.ITALIC + "Input cancelled."));
             } else {
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    ci.getTemplateNames().add(campName.toLowerCase());
+                    ci.getTemplateNames().add(templateName.toLowerCase());
                     templateMenu.menu(player);
                 });
             }
@@ -209,23 +229,29 @@ public class GuiMenuListener implements Listener {
         player.sendMessage(ChatColor.GRAY + ("Or type \"cancel\" for cancel this event: "));
         waitingForInput.put(player, true);
     }
-    //END CHAT
+////// END CHAT
 
-///SAVE BLUEPRINT
-    public void saveBlueprint(ConfigsInitialize ci, YamlConfiguration config, File file, Inventory inventory)
+/// SAVE BLUEPRINT
+    public void saveTemplate(ConfigsInitialize ci, YamlConfiguration config, File file, Inventory inventory)
     {
         List<Integer> placingSlots = new ArrayList<>(gcs.getInputSlotsIndexes());
         for ( Integer slot : placingSlots) {
            if (!isSlotEmpty(inventory, slot)){
-               config.set("CampBlueprint."+campName+".blueprint." + slot,inventory.getItem(slot).getType().name());
+               config.set("CampBlueprint."+ templateName +".blueprint." + slot,inventory.getItem(slot).getType().name());
            } else{
-               config.set("CampBlueprint."+campName+".blueprint." + slot, Material.AIR.name());
+               config.set("CampBlueprint."+ templateName +".blueprint." + slot, Material.AIR.name());
 
            }
-            config.set("CampBlueprint."+campName+".size", choiceSize);
+            config.set("CampBlueprint."+ templateName +".size", choiceSize);
             ci.saveConfig(config,file);
        }
     }
+///SAVE LINKED ITEM
+    public void saveLinkedItem (ConfigsInitialize ci, YamlConfiguration config, File file, ItemStack item){
+        config.set("LinkedItems."+ templateName, item);
+        ci.saveConfig(config,file);
+    }
+
 ///CLEAR PLACING SLOTS
     public void clearSlots(Inventory inventory){
         List<Integer> placingSlots = new ArrayList<>(gcs.getInputSlotsIndexes());
