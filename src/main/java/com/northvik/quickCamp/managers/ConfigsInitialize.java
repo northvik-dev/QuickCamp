@@ -1,30 +1,29 @@
 package com.northvik.quickCamp.managers;
 
 import com.northvik.quickCamp.QuickCamp;
-import com.northvik.quickCamp.utils.GuiButtonIndexes;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ConfigsInitialize {
-//slots:
-//  - 0,1,2,3,4,5,6,7,8,
-//  - 9,10,11,12,13,14,15,16,17,
-//  - 18,19,20,21,22,23,24,25,26,
-//  - 27,28,29,30,31,32,33,34,35,
-//  - 36,37,38,39,40,41,42,43,44,
-//  - 45,46,47,48,49,50,51,52,53,
-
     QuickCamp plugin;
-    File file;
+
+    File mainConfigFile;
     File locationFile;
-    YamlConfiguration config;
+    File templatesFile;
+
+    YamlConfiguration mainConfig;
     YamlConfiguration campLocationConfig;
+    YamlConfiguration templatesConfig;
+
     HashMap<Integer,String> campBlueprint = new HashMap<>();
     List<Material> goodsProtectionList = new ArrayList<>();
     List<String> savedTemplateNames = new ArrayList<>();
@@ -37,11 +36,12 @@ public class ConfigsInitialize {
     }
 
     public void loadFile(){
-        file = new File(plugin.getPlugin().getDataFolder(), "config.yml");
+        mainConfigFile = new File(plugin.getPlugin().getDataFolder(), "config.yml");
         locationFile = new File(plugin.getPlugin().getDataFolder(), "camps.yml");
-        if (!file.exists()){
+        templatesFile = new File(plugin.getPlugin().getDataFolder(), "templates.yml");
+        if (!mainConfigFile.exists()){
             try {
-                file.createNewFile();
+                mainConfigFile.createNewFile();
                 plugin.getLogger().info("config.yml created successfully!");
             } catch (IOException e) {
                 plugin.getLogger().info("Unable to create config.yml");
@@ -57,17 +57,27 @@ public class ConfigsInitialize {
                 throw new RuntimeException(e);
             }
         }
+        if (!templatesFile.exists()){
+            try {
+                templatesFile.createNewFile();
+                plugin.getLogger().info("templates.yml created successfully!");
+            } catch (IOException e) {
+                plugin.getLogger().info("Unable to create templates.yml");
+                throw new RuntimeException(e);
+            }
+        }
 
         campLocationConfig = YamlConfiguration.loadConfiguration(locationFile);
-        config = YamlConfiguration.loadConfiguration(file);
+        mainConfig = YamlConfiguration.loadConfiguration(mainConfigFile);
+        templatesConfig = YamlConfiguration.loadConfiguration(templatesFile);
     }
 
     public HashMap<Integer, String> getCampTemplate(String templateName) {
         campBlueprint.clear(); // Clear the existing map to ensure it's fresh
         plugin.reloadConfig(); // Reload the config
         loadFile(); // Reload the cached files
-        if (config.getConfigurationSection("CampBlueprint." + templateName) != null) {
-            ConfigurationSection blueprintSection = config.getConfigurationSection("CampBlueprint." + templateName + ".blueprint");
+        if (templatesConfig.getConfigurationSection("CampBlueprint." + templateName) != null) {
+            ConfigurationSection blueprintSection = templatesConfig.getConfigurationSection("CampBlueprint." + templateName + ".blueprint");
 
             for (String key : blueprintSection.getKeys(false)) {
                 try {
@@ -88,37 +98,45 @@ public class ConfigsInitialize {
         }
         return  campBlueprint;
     }
-
+    ///GET TEMPLATE SIZE
     public int getCampTemplateSize(String templateName){
         campBlueprint.clear(); // Clear the existing map to ensure it's fresh
         plugin.reloadConfig(); // Reload the config
         loadFile();
         int size;
-        if (config.getConfigurationSection("CampBlueprint." + templateName) != null) {
+        if (templatesConfig.getConfigurationSection("CampBlueprint." + templateName) != null) {
 
-            ConfigurationSection blueprintSection = config.getConfigurationSection("CampBlueprint." + templateName);
+            ConfigurationSection blueprintSection = templatesConfig.getConfigurationSection("CampBlueprint." + templateName);
             size = blueprintSection.getInt(".size");
         } else{
             size = 1;
         }
         return size;
     }
-
+    //LINKED ITEM
+    public ItemStack getLinkedItem(String templateName) {
+        ItemStack item = mainConfig.getItemStack("LinkedItems." + templateName +".itemStack");
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(mainConfig.getString("LinkedItems." + templateName + ".displayedName"));
+        meta.setLore(mainConfig.getStringList("LinkedItems." + templateName + ".Lore"));
+        item.setItemMeta(meta);
+        return  item;
+    }
     //TEMPLATES NAMES LIST
     public List<String> getTemplateNames (){
         savedTemplateNames.clear(); // Clear the existing map to ensure it's fresh
         plugin.reloadConfig(); // Reload the config
         loadFile();
-        if (config.getConfigurationSection("CampBlueprint")!= null) {
-            savedTemplateNames.addAll(config.getConfigurationSection("CampBlueprint").getKeys(false));
+        if (templatesConfig.getConfigurationSection("CampBlueprint")!= null) {
+            savedTemplateNames.addAll(templatesConfig.getConfigurationSection("CampBlueprint").getKeys(false));
         }
         return savedTemplateNames;
     }
 
     //Get list of GoodsProtection
     public List<Material> getGoodsProtectionList(){
-        List<String> goodsProtection =  config.getStringList("GoodsProtection.");
-        if (config.getConfigurationSection("GoodsProtection")!= null) {
+        List<String> goodsProtection =  mainConfig.getStringList("GoodsProtection.");
+        if (mainConfig.getConfigurationSection("GoodsProtection")!= null) {
             for (String name: goodsProtection){
                 goodsProtectionList.add(Material.valueOf(name));
             }
@@ -135,17 +153,23 @@ public class ConfigsInitialize {
         }
     }
     //CONFIG
-    public YamlConfiguration getYmlConfig(){
-        return config;
+    public YamlConfiguration getMainConfig() {
+        return mainConfig;
+    }
+    public YamlConfiguration getTemplatesConfig(){
+        return templatesConfig;
     }
 
     public YamlConfiguration getCampLocationConfig(){
         return campLocationConfig;
     }
+    public File getMainConfigFile() {
+        return mainConfigFile;
+    }
     public File getLocationFile(){
         return locationFile;
     }
-    public File getFile(){
-        return file;
+    public File getTemplatesFile(){
+        return templatesFile;
     }
 }

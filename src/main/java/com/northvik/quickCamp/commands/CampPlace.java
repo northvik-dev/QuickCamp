@@ -41,7 +41,7 @@ public class CampPlace {
                     claimHandler.setRegionFlags(player);
                     setCamp(templateName);
                     locatedCampPDC.setCamp();
-                    player.sendMessage(ChatColor.GREEN + "You have set camp at: " + locatedCampPDC.getCampLocation());
+                    player.sendMessage(ChatColor.DARK_GREEN + "You have set camp at: " + ChatColor.GREEN+ locatedCampPDC.getCampLocation());
                 }
             } else {
                 player.sendMessage(ChatColor.RED + "You cannot place camp here.");

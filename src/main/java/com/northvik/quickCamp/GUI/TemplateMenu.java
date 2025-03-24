@@ -22,6 +22,7 @@ import java.util.*;
 public class TemplateMenu {
     QuickCamp plugin;
     int choiceSize;
+    GuiButtonIndexes gbi;
 
     public void setChoiceSize(int choiceSize) {
         this.choiceSize = choiceSize;
@@ -29,23 +30,30 @@ public class TemplateMenu {
 
     public TemplateMenu(QuickCamp plugin){
         this.plugin = plugin;
+        this.gbi = new GuiButtonIndexes();
     }
     Inventory campGui;
     public void menu(Player player) {
         getInventory(player);
-        GuiButtonIndexes gbi = new GuiButtonIndexes();
 
-        // Save button
-        ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
-        ItemMeta saveButtonMeta = saveButton.getItemMeta();
-        saveButtonMeta.setDisplayName(ChatColor.GREEN + "Save");
-        saveButton.setItemMeta(saveButtonMeta);
 
         // Close button
         ItemStack closeButton = new ItemStack(Material.BARRIER);
         ItemMeta closeButtonMeta = closeButton.getItemMeta();
         closeButtonMeta.setDisplayName(ChatColor.GRAY + "Back");
         closeButton.setItemMeta(closeButtonMeta);
+
+        // Close button
+        ItemStack itemLinkButton = new ItemStack(Material.FLINT_AND_STEEL);
+        ItemMeta itemLinkButtonMeta = itemLinkButton.getItemMeta();
+        itemLinkButtonMeta.setDisplayName(ChatColor.GRAY + "Link item");
+        itemLinkButton.setItemMeta(itemLinkButtonMeta);
+
+        // Save button
+        ItemStack saveButton = getCustomSkull("a79a5c95ee17abfef45c8dc224189964944d560f19a44f19f8a46aef3fee4756");
+        ItemMeta saveButtonMeta = saveButton.getItemMeta();
+        saveButtonMeta.setDisplayName(ChatColor.GREEN + "Save");
+        saveButton.setItemMeta(saveButtonMeta);
 
         //Clear button
         ItemStack clearButton = getCustomSkull("cb067ae612d5256a24ccfc74c11814f01962b4d81817a618134b45f36fe6fcb3");
@@ -58,11 +66,10 @@ public class TemplateMenu {
         ItemMeta infoButtonMeta = infoButton.getItemMeta();
         infoButtonMeta.setDisplayName(ChatColor.GRAY + (ChatColor.BOLD + "Info"));
         infoButtonMeta.setLore(Arrays.asList(
-                ChatColor.YELLOW + "Delete button:",
-                ChatColor.GRAY + " - clear blueprint configs and table.",
-                ChatColor.GREEN + "Save button:",
-                ChatColor.GRAY + " - save template and blueprint to config file."
-                ));
+                ChatColor.GRAY+ "Click to get links:",
+                ChatColor.BLUE + "- Documentation",
+                ChatColor.BLUE + "- Discord"
+        ));
         infoButton.setItemMeta(infoButtonMeta);
 
         //Camp size button
@@ -73,6 +80,7 @@ public class TemplateMenu {
         campGui.setItem(gbi.getClearButton(), clearButton);
         campGui.setItem(gbi.getInfoButton(), infoButton);
         campGui.setItem(gbi.getSizeButton(), sizeButton);
+        campGui.setItem(gbi.getItemLinkButton(), itemLinkButton);
         player.openInventory(campGui);
     }
 
@@ -86,6 +94,8 @@ public class TemplateMenu {
             ItemStack item = new ItemStack(Material.valueOf(matString));
             campGui.setItem(entry.getKey(), item);
         }
+            campGui.setItem(gbi.getItemLinkSlot(),ci.getLinkedItem(templateName));
+
     }
     ////non usable area
     public ItemStack getNonUsableItem(){

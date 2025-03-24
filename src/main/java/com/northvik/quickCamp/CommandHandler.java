@@ -6,14 +6,25 @@ import com.northvik.quickCamp.commands.CampRemove;
 import com.northvik.quickCamp.managers.BlocksLocationList;
 import com.northvik.quickCamp.managers.ConfigsInitialize;
 import com.northvik.quickCamp.managers.LocatedCampPDC;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class CommandHandler implements CommandExecutor {
     private final QuickCamp plugin;
@@ -39,18 +50,59 @@ public class CommandHandler implements CommandExecutor {
             if (command.getName().equalsIgnoreCase("camp")) {
                 if (strings.length == 0) {
                     if (isPermission(player, "quickcamp.camp")) {
-                        player.sendMessage(ChatColor.YELLOW + "Usage: /camp <template | gui | remove | location>");
+                        player.sendMessage(ChatColor.YELLOW + "Usage:"+
+                                "\n\n /camp remove" +
+                                "\n\n /camp location");
                         return true;
                     }
                 } else {
                     String subCommand = strings[0];
                     List<String> templateNames = new ArrayList<>(ci.getTemplateNames());
-                    if (templateNames.contains(subCommand)) {
-                        if (isPermission(player, "quickcamp.camp")) {
-                            campPlace.campPlace(subCommand);
-                            campSize = ci.getCampTemplateSize(subCommand);
+                    if (subCommand.equalsIgnoreCase("place")) {
+                        if (strings[1]==null){
+                            return false;
                         }
-                    } else if (subCommand.equalsIgnoreCase("gui")) {
+                        if(templateNames.contains(strings[1])) {
+                            if (isPermission(player, "quickcamp.camp.place")) {
+                                campPlace.campPlace(strings[1]);
+                                campSize = ci.getCampTemplateSize(strings[1]);
+                            }
+                        }
+                    } else if (subCommand.equalsIgnoreCase("give")) {
+                        if (isPermission(player, "quickcamp.camp.give")) {
+                            if (strings.length < 3) {
+                                sender.sendMessage(ChatColor.YELLOW + "Usage: /camp give <player> <template_name>");
+                                return false;
+                            }
+
+                            // Get the target player
+                            Player target = Bukkit.getPlayerExact(strings[1]);
+                            if (target == null) {
+                                sender.sendMessage(ChatColor.RED + "Player not found.");
+                                return false;
+                            }
+
+                            // Get template
+                            String templateName = strings[2];
+                            if (!ci.getTemplateNames().contains(templateName)) {
+                                sender.sendMessage(ChatColor.RED + "Invalid template name.");
+                                return false;
+                            }
+                            // Create the item stack and add it to the player's inventory
+                            ItemStack itemStack = ci.getLinkedItem(templateName);
+                            ItemMeta itemMeta = itemStack.getItemMeta();
+                            itemStack.setItemMeta(itemMeta);
+
+                            target.getInventory().addItem(itemStack);
+                            if (itemMeta!=null) {
+                                String itemName = itemMeta.getDisplayName();
+                                // Send feedback to sender and player
+                                sender.sendMessage((ChatColor.GRAY+"Gave ") + (itemName) + (ChatColor.GRAY+" to ") + (ChatColor.BOLD+target.getName()));
+                                target.sendMessage("You received " + itemName);
+                            }
+                            return true;
+                        }
+                    }else if (subCommand.equalsIgnoreCase("gui")) {
                         if (isPermission(player, "quickcamp.camp.gui")) {
                             cm.menu(player, plugin);
                         }
@@ -61,10 +113,31 @@ public class CommandHandler implements CommandExecutor {
                     } else if (subCommand.equalsIgnoreCase("location")) {
                         if (isPermission(player, "quickcamp.camp")) {
                             if (lc.isCamping()) {
-                                player.sendMessage(ChatColor.GREEN + "Your camp located at: " + lc.getCampLocation());
+                                player.sendMessage(ChatColor.DARK_GREEN + "Your camp located at: " + ChatColor.GREEN + lc.getCampLocation());
                             } else {
                                 player.sendMessage(ChatColor.RED + "You don't have any camp set!");
                             }
+                        }
+                    } else if (subCommand.equalsIgnoreCase("help")) {
+                        if (isPermission(player, "quickcamp.camp.help")) {
+                            player.sendMessage(ChatColor.GREEN + "\n\n---------[QuickCamp] Usage:---------" +
+                                    ChatColor.YELLOW+"\n\n /camp place <template_name> - place a camp" +
+                                    "\n\n /camp gui - open GUI menu" +
+                                    "\n\n /camp remove - removing camp" +
+                                    "\n\n /camp location - send the location of placed camp");
+
+                            TextComponent msg = new TextComponent(ChatColor.LIGHT_PURPLE + "\n Have question or need help?");
+                            TextComponent end = new TextComponent(ChatColor.GREEN +"\n----------------------------------");
+                            TextComponent discord = new TextComponent(ChatColor.AQUA+"\n --> Click to join our Discord <--");
+                            discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/jT8X9faerT"));
+                            discord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://discord.gg/jT8X9faerT")));
+                            TextComponent documentation = new TextComponent(ChatColor.BLUE+"\n --> Open documentation <--");
+                            documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/northvik-dev/QuickCamp/wiki"));
+                            documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://github.com/northvik-dev/QuickCamp/wiki")));
+                            msg.addExtra(discord);
+                            msg.addExtra(documentation);
+                            msg.addExtra(end);
+                            player.spigot().sendMessage(msg);
                         }
                     }
                 }
