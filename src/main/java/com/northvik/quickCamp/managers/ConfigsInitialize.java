@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,27 +42,27 @@ public class ConfigsInitialize {
         if (!mainConfigFile.exists()){
             try {
                 mainConfigFile.createNewFile();
-                plugin.getLogger().info("[QuickCamp] config.yml created successfully!");
+                plugin.getLogger().info("config.yml created successfully!");
             } catch (IOException e) {
-                plugin.getLogger().info("[QuickCamp] Unable to create config.yml");
+                plugin.getLogger().info("Unable to create config.yml");
                 throw new RuntimeException(e);
             }
         }
         if (!locationFile.exists()){
             try {
                 locationFile.createNewFile();
-                plugin.getLogger().info("[QuickCamp] camps.yml created successfully!");
+                plugin.getLogger().info("camps.yml created successfully!");
             } catch (IOException e) {
-                plugin.getLogger().info("[QuickCamp] Unable to create camps.yml");
+                plugin.getLogger().info("Unable to create camps.yml");
                 throw new RuntimeException(e);
             }
         }
         if (!templatesFile.exists()){
             try {
                 templatesFile.createNewFile();
-                plugin.getLogger().info("[QuickCamp] templates.yml created successfully!");
+                plugin.getLogger().info("templates.yml created successfully!");
             } catch (IOException e) {
-                plugin.getLogger().info("[QuickCamp] Unable to create templates.yml");
+                plugin.getLogger().info("Unable to create templates.yml");
                 throw new RuntimeException(e);
             }
         }
@@ -97,7 +98,7 @@ public class ConfigsInitialize {
         }
         return  campBlueprint;
     }
-
+    ///GET TEMPLATE SIZE
     public int getCampTemplateSize(String templateName){
         campBlueprint.clear(); // Clear the existing map to ensure it's fresh
         plugin.reloadConfig(); // Reload the config
@@ -114,8 +115,12 @@ public class ConfigsInitialize {
     }
     //LINKED ITEM
     public ItemStack getLinkedItem(String templateName) {
-
-        return  mainConfig.getItemStack("LinkedItems." + templateName);
+        ItemStack item = mainConfig.getItemStack("LinkedItems." + templateName +".itemStack");
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(mainConfig.getString("LinkedItems." + templateName + ".displayedName"));
+        meta.setLore(mainConfig.getStringList("LinkedItems." + templateName + ".Lore"));
+        item.setItemMeta(meta);
+        return  item;
     }
     //TEMPLATES NAMES LIST
     public List<String> getTemplateNames (){

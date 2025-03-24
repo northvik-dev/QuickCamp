@@ -24,9 +24,11 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -248,7 +250,21 @@ public class GuiMenuListener implements Listener {
     }
 ///SAVE LINKED ITEM
     public void saveLinkedItem (ConfigsInitialize ci, YamlConfiguration config, File file, ItemStack item){
-        config.set("LinkedItems."+ templateName, item);
+        ItemMeta meta = item.getItemMeta();
+        if(!meta.getDisplayName().isEmpty()){
+            config.set("LinkedItems."+ templateName +".displayedName", meta.getDisplayName());
+        }else if(meta.getDisplayName().isEmpty()){
+            config.set("LinkedItems."+ templateName +".displayedName", ChatColor.DARK_GREEN + (ChatColor.BOLD+ templateName));
+        }
+        if (meta.getLore() != null){
+            config.set("LinkedItems."+ templateName +".Lore", meta.getLore());
+        }else {
+            config.set("LinkedItems."+ templateName +".Lore", Arrays.asList(ChatColor.GRAY + "Camp size:",
+                    ChatColor.YELLOW + gbi.configSizeToLore(ci.getCampTemplateSize(templateName)),
+                    "",
+                    ChatColor.DARK_GRAY + "Right click to place"));
+        }
+        config.set("LinkedItems."+ templateName +".itemStack", item);
         ci.saveConfig(config,file);
     }
 

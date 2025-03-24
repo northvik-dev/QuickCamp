@@ -54,7 +54,7 @@ public class SavedTemplatesMenu {
                 templateMeta.setDisplayName(ChatColor.GRAY + name);
                 templateMeta.setLore(Arrays.asList(
                         ChatColor.GRAY + "-----",
-                       ChatColor.GRAY + "Camp size: " + configSizeToLore(ci.getCampTemplateSize(name)),
+                       ChatColor.GRAY + "Camp size: " + gbi.configSizeToLore(ci.getCampTemplateSize(name)),
                         "",
                         ChatColor.YELLOW + (ChatColor.ITALIC + "Click to edit.")
                 ));
@@ -67,22 +67,5 @@ public class SavedTemplatesMenu {
 
     }
 
-    public String configSizeToLore (int campSize){
-            String sizeLore = "";
-        switch (campSize){
-            case 1: {
-                sizeLore = "3x3";
-            }break;
-            case 2: {
-                sizeLore = "4x4";
-            }break;
-            case 3: {
-                sizeLore = "5x5";
-            }break;
-            case 4: {
-                sizeLore = "6x6";
-            }
-        }
-            return sizeLore;
-    }
+
 }
