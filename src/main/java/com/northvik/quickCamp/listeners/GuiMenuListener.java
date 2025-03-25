@@ -149,7 +149,9 @@ public class GuiMenuListener implements Listener {
                 } else{
                     ItemStack item = e.getInventory().getItem(gbi.getItemLinkSlot());
                     saveLinkedItem(ci, ci.getMainConfig(), ci.getMainConfigFile(),linkItem.getLinkedItem(item, templateName));
-
+                    player.sendMessage(ChatColor.GREEN + "Template " +
+                            ChatColor.DARK_GREEN +(ChatColor.BOLD + templateName) +
+                            ChatColor.GREEN + " successfully linked to item!");
                 }
                 e.setCancelled(true);
             }
@@ -191,8 +193,8 @@ public class GuiMenuListener implements Listener {
                 discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/jT8X9faerT"));
                 discord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://discord.gg/jT8X9faerT")));
                 TextComponent documentation = new TextComponent(org.bukkit.ChatColor.BLUE+"\n --> Open documentation <--");
-                documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/northvik-dev/QuickCamp/wiki"));
-                documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://github.com/northvik-dev/QuickCamp/wiki")));
+                documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://northvik.gitbook.io/quickcamp"));
+                documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://northvik.gitbook.io/quickcamp")));
                 start.addExtra(msg);
                 start.addExtra(discord);
                 start.addExtra(documentation);

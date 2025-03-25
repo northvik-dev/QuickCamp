@@ -25,3 +25,7 @@ permissions:
   quickcamp.camp.help:
     description: Grants access to /camp help
     default: op
+  quickcamp.camp.give:
+    description: Grants access to /camp give
+    default: op
+
