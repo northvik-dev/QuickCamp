@@ -58,14 +58,18 @@ public class CommandHandler implements CommandExecutor {
                 } else {
                     String subCommand = strings[0];
                     List<String> templateNames = new ArrayList<>(ci.getTemplateNames());
+
                     if (subCommand.equalsIgnoreCase("place")) {
-                        if (strings[1]==null){
-                            return false;
-                        }
-                        if(templateNames.contains(strings[1])) {
-                            if (isPermission(player, "quickcamp.camp.place")) {
+                        if (isPermission(player, "quickcamp.camp.place")) {
+                            if (strings.length < 2){
+                                sender.sendMessage(ChatColor.YELLOW + "Usage: /camp place <template_name>");
+                                return false;
+                            }
+                            if(templateNames.contains(strings[1])) {
                                 campPlace.campPlace(strings[1]);
                                 campSize = ci.getCampTemplateSize(strings[1]);
+                            } else {
+                                sender.sendMessage(ChatColor.RED + "Invalid template name.");
                             }
                         }
                     } else if (subCommand.equalsIgnoreCase("give")) {
@@ -124,7 +128,10 @@ public class CommandHandler implements CommandExecutor {
                                     ChatColor.YELLOW+"\n\n /camp place <template_name> - place a camp" +
                                     "\n\n /camp gui - open GUI menu" +
                                     "\n\n /camp remove - removing camp" +
-                                    "\n\n /camp location - send the location of placed camp");
+                                    "\n\n /camp location - send the location of placed camp" +
+                                    "\n\n /camp give <player> <template_name> - give linked camp item to player"
+                            );
+
 
                             TextComponent msg = new TextComponent(ChatColor.LIGHT_PURPLE + "\n Have question or need help?");
                             TextComponent end = new TextComponent(ChatColor.GREEN +"\n----------------------------------");
@@ -132,8 +139,8 @@ public class CommandHandler implements CommandExecutor {
                             discord.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://discord.gg/jT8X9faerT"));
                             discord.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://discord.gg/jT8X9faerT")));
                             TextComponent documentation = new TextComponent(ChatColor.BLUE+"\n --> Open documentation <--");
-                            documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/northvik-dev/QuickCamp/wiki"));
-                            documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://github.com/northvik-dev/QuickCamp/wiki")));
+                            documentation.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://northvik.gitbook.io/quickcamp"));
+                            documentation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("https://northvik.gitbook.io/quickcamp")));
                             msg.addExtra(discord);
                             msg.addExtra(documentation);
                             msg.addExtra(end);
