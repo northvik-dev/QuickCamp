@@ -2,6 +2,8 @@ package com.northvik.quickCamp.commands;
 
 import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.*;
+import com.northvik.quickCamp.utils.DependencyCheck;
+import com.palmergames.bukkit.towny.TownyAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,36 +21,26 @@ public class CampPlace {
     BlocksLocationList bll = new BlocksLocationList();
     ConfigsInitialize ci;
     GuiCustomSize gcs = new GuiCustomSize();
+    DependencyCheck dependencyCheck;
     public CampPlace(Player player, QuickCamp plugin, ConfigsInitialize ci){
         this.player = player;
         this.plugin = plugin;
         this.ci = ci;
+        this.dependencyCheck = plugin.getDependencyCheck();
     }
 
     public void campPlace(String templateName){
-        SafeCheck safeCheck = new SafeCheck();
-        bll.blockLocations(player, plugin, ci.getCampTemplateSize(templateName));
-        LocatedCampPDC locatedCampPDC = new LocatedCampPDC(player, bll.getCampLocation(), plugin);
-        safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList(), player);
 
-        Location pos1 = player.getLocation().clone().add(bll.getMin(),-1,bll.getMax()-1);
-        Location pos2 = player.getLocation().clone().add(bll.getMax()-1,3,bll.getMin());
-        ClaimHandler claimHandler = new ClaimHandler();
-
-        if (!locatedCampPDC.isCamping()){
-            if (safeCheck.isSafe()) {
-                if(claimHandler.claimLand(player,pos1,pos2)) {
-                    claimHandler.setRegionFlags(player);
-                    setCamp(templateName);
-                    locatedCampPDC.setCamp();
-                    player.sendMessage(ChatColor.DARK_GREEN + "You have set camp at: " + ChatColor.GREEN+ locatedCampPDC.getCampLocation());
-                }
-            } else {
-                player.sendMessage(ChatColor.RED + "You cannot place camp here.");
+        if (dependencyCheck.isTowny()){
+            if(TownyAPI.getInstance().isWilderness(player.getLocation())){
+                defaultPlacing(templateName);
+            }else{
+                player.sendMessage(ChatColor.RED + " Sorry, you cannot set a camp in the town.");
             }
-        } else {
-            player.sendMessage(ChatColor.RED + "You cannot place more than one camp!");
+        }else {
+            defaultPlacing(templateName);
         }
+
     }
     public void setCamp(String templateName){
         gcs.convertSlotsToInt(ci.getCampTemplateSize(templateName));
@@ -97,5 +89,31 @@ public class CampPlace {
 
         ci.getCampLocationConfig().set(path, blockLocations);
         ci.saveConfig(ci.getCampLocationConfig(),ci.getLocationFile());
+    }
+
+    public void defaultPlacing(String templateName){
+        SafeCheck safeCheck = new SafeCheck();
+        bll.blockLocations(player, plugin, ci.getCampTemplateSize(templateName));
+        LocatedCampPDC locatedCampPDC = new LocatedCampPDC(player, bll.getCampLocation(), plugin);
+        safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList(), player, plugin);
+
+        Location pos1 = player.getLocation().clone().add(bll.getMin(),-1,bll.getMax()-1);
+        Location pos2 = player.getLocation().clone().add(bll.getMax()-1,3,bll.getMin());
+        ClaimHandler claimHandler = new ClaimHandler();
+
+        if (!locatedCampPDC.isCamping()){
+            if (safeCheck.isSafe()) {
+                if(claimHandler.claimLand(player,pos1,pos2)) {
+                    claimHandler.setRegionFlags(player);
+                    setCamp(templateName);
+                    locatedCampPDC.setCamp();
+                    player.sendMessage(ChatColor.DARK_GREEN + "You have set camp at: " + ChatColor.GREEN+ locatedCampPDC.getCampLocation());
+                }
+            } else {
+                player.sendMessage(ChatColor.RED + "You cannot place camp here.");
+            }
+        } else {
+            player.sendMessage(ChatColor.RED + "You cannot place more than one camp!");
+        }
     }
 }

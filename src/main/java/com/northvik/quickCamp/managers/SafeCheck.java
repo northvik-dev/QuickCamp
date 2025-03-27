@@ -1,5 +1,7 @@
 package com.northvik.quickCamp.managers;
 
+import com.northvik.quickCamp.QuickCamp;
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -19,7 +21,7 @@ public class SafeCheck {
     boolean isAreaSafe;
     boolean isBaseSafe;
 
-    public void areaCheck(List<Location> base, List<Location> place, Player player) {
+    public void areaCheck(List<Location> base, List<Location> place, Player player, QuickCamp plugin) {
         this.base = base;
         this.place = place;
 
@@ -27,7 +29,7 @@ public class SafeCheck {
             Material type = location.getBlock().getType();
 
             if (isProtected(location, player) || type.isAir() || type.equals(Material.WATER)
-                    || type.equals(Material.LAVA) || type.equals(Material.ICE)) {
+                    || type.equals(Material.LAVA) || type.equals(Material.ICE) || ( plugin.getDependencyCheck().isTowny() && !TownyAPI.getInstance().isWilderness(location))) {
                 isBaseSafe = false;
                 break;
             } else {
@@ -55,5 +57,6 @@ public class SafeCheck {
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
         return !set.testState(WorldGuardPlugin.inst().wrapPlayer(player), Flags.BUILD);
     }
+
 }
 
