@@ -89,11 +89,19 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+
         <!-- Towny  -->
         <repository>
             <id>glaremasters repo</id>
             <url>https://repo.glaremasters.me/repository/towny/</url>
         </repository>
+
+        <!-- GriefPrevention -->
+        <repository>
+                <id>jitpack.io</id>
+                <url>https://jitpack.io</url>
+            </repository>
+
         <!-- WorldGuard -->
             <repository>
                 <id>sk89q-repo</id>
@@ -130,6 +138,13 @@
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
             <version>0.101.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- GriefPrevention -->
+        <dependency>
+            <groupId>com.github.GriefPrevention</groupId>
+            <artifactId>GriefPrevention</artifactId>
+            <version>16.18.2</version>
             <scope>provided</scope>
         </dependency>
         <!-- WorldGuard -->

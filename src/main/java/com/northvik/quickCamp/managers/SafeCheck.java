@@ -21,6 +21,9 @@ public class SafeCheck {
     boolean isAreaSafe;
     boolean isBaseSafe;
 
+
+
+    String region;
     public void areaCheck(List<Location> base, List<Location> place, Player player, QuickCamp plugin) {
         this.base = base;
         this.place = place;
@@ -28,14 +31,28 @@ public class SafeCheck {
         for (Location location : base) {
             Material type = location.getBlock().getType();
 
-            if (isProtected(location, player) || type.isAir() || type.equals(Material.WATER)
-                    || type.equals(Material.LAVA) || type.equals(Material.ICE) || ( plugin.getDependencyCheck().isTowny() && !TownyAPI.getInstance().isWilderness(location))) {
+            if ( plugin.getDependencyCheck().isTowny() && isLocationClaimedByGriefPrevention(location, plugin)){
+                region = " at claimed area!";
+                return;
+            }
+            if (plugin.getDependencyCheck().isGriefPrevention() && isLocationInTown(location, plugin)){
+                region = " in a town!";
+                return;
+            }
+
+            if (isProtected(location, player)
+                    || type.isAir()
+                    || type.equals(Material.WATER)
+                    || type.equals(Material.LAVA)
+                    || type.equals(Material.ICE)
+            ) {
                 isBaseSafe = false;
                 break;
             } else {
                 isBaseSafe = true;
             }
         }
+
         for (Location location : place) {
             Material type = location.getBlock().getType();
             if (isProtected(location, player) || type.isSolid()|| type.equals(Material.WATER)
@@ -58,5 +75,16 @@ public class SafeCheck {
         return !set.testState(WorldGuardPlugin.inst().wrapPlayer(player), Flags.BUILD);
     }
 
+    private boolean isLocationClaimedByGriefPrevention(Location location, QuickCamp plugin) {
+        GriefPreventionClaimCheck gpClaimCheck = new GriefPreventionClaimCheck();
+        return gpClaimCheck.isClaimed(location);
+    }
+
+    private boolean isLocationInTown(Location location, QuickCamp plugin) {
+        return !TownyAPI.getInstance().isWilderness(location);
+    }
+    public String getMsgRegion() {
+        return region;
+    }
 }
 

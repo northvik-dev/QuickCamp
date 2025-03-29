@@ -7,6 +7,9 @@ description: Quick Camp plugin.
 depend:
   - WorldEdit
   - WorldGuard
+softdepend:
+  - Towny
+
 
 commands:
   camp:
