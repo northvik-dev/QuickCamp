@@ -9,7 +9,7 @@ depend:
   - WorldGuard
 softdepend:
   - Towny
-
+  - GriefPrevention
 
 commands:
   camp:

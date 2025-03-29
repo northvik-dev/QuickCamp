@@ -31,12 +31,12 @@ public class SafeCheck {
         for (Location location : base) {
             Material type = location.getBlock().getType();
 
-            if ( plugin.getDependencyCheck().isTowny() && isLocationClaimedByGriefPrevention(location, plugin)){
-                region = " at claimed area!";
+            if ( plugin.getDependencyCheck().isTowny() && isLocationInTown(location, plugin)){
+                region = " in a town!";
                 return;
             }
-            if (plugin.getDependencyCheck().isGriefPrevention() && isLocationInTown(location, plugin)){
-                region = " in a town!";
+            if (plugin.getDependencyCheck().isGriefPrevention() && isLocationClaimedByGriefPrevention(location, plugin)){
+                region = " at claimed area!";
                 return;
             }
 

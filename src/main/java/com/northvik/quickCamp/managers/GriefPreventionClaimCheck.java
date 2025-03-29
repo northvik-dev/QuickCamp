@@ -7,6 +7,7 @@ import org.bukkit.Location;
 public class GriefPreventionClaimCheck {
 
     public boolean isClaimed(Location location) {
+
         // Access the DataStore instance from GriefPrevention
         DataStore dataStore = GriefPrevention.instance.dataStore;
 
