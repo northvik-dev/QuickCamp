@@ -2,6 +2,8 @@ package com.northvik.quickCamp.commands;
 
 import com.northvik.quickCamp.QuickCamp;
 import com.northvik.quickCamp.managers.*;
+import com.northvik.quickCamp.utils.DependencyCheck;
+import com.palmergames.bukkit.towny.TownyAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,17 +21,20 @@ public class CampPlace {
     BlocksLocationList bll = new BlocksLocationList();
     ConfigsInitialize ci;
     GuiCustomSize gcs = new GuiCustomSize();
+    DependencyCheck dependencyCheck;
     public CampPlace(Player player, QuickCamp plugin, ConfigsInitialize ci){
         this.player = player;
         this.plugin = plugin;
         this.ci = ci;
+        this.dependencyCheck = plugin.getDependencyCheck();
     }
 
     public void campPlace(String templateName){
+
         SafeCheck safeCheck = new SafeCheck();
         bll.blockLocations(player, plugin, ci.getCampTemplateSize(templateName));
         LocatedCampPDC locatedCampPDC = new LocatedCampPDC(player, bll.getCampLocation(), plugin);
-        safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList(), player);
+        safeCheck.areaCheck(bll.getBasementAreaList(), bll.getPlacingAreaList(), player, plugin);
 
         Location pos1 = player.getLocation().clone().add(bll.getMin(),-1,bll.getMax()-1);
         Location pos2 = player.getLocation().clone().add(bll.getMax()-1,3,bll.getMin());
@@ -44,11 +49,12 @@ public class CampPlace {
                     player.sendMessage(ChatColor.DARK_GREEN + "You have set camp at: " + ChatColor.GREEN+ locatedCampPDC.getCampLocation());
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "You cannot place camp here.");
+                player.sendMessage(ChatColor.RED + "You cannot place camp" + (safeCheck.getMsgRegion() != null ? safeCheck.getMsgRegion() : " here!" ) );
             }
         } else {
             player.sendMessage(ChatColor.RED + "You cannot place more than one camp!");
-        }
+        };
+
     }
     public void setCamp(String templateName){
         gcs.convertSlotsToInt(ci.getCampTemplateSize(templateName));

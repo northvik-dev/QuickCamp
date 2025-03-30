@@ -1,5 +1,7 @@
 package com.northvik.quickCamp.managers;
 
+import com.northvik.quickCamp.QuickCamp;
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -19,21 +21,38 @@ public class SafeCheck {
     boolean isAreaSafe;
     boolean isBaseSafe;
 
-    public void areaCheck(List<Location> base, List<Location> place, Player player) {
+
+
+    String region;
+    public void areaCheck(List<Location> base, List<Location> place, Player player, QuickCamp plugin) {
         this.base = base;
         this.place = place;
 
         for (Location location : base) {
             Material type = location.getBlock().getType();
 
-            if (isProtected(location, player) || type.isAir() || type.equals(Material.WATER)
-                    || type.equals(Material.LAVA) || type.equals(Material.ICE)) {
+            if ( plugin.getDependencyCheck().isTowny() && isLocationInTown(location, plugin)){
+                region = " in a town!";
+                return;
+            }
+            if (plugin.getDependencyCheck().isGriefPrevention() && isLocationClaimedByGriefPrevention(location, plugin)){
+                region = " at claimed area!";
+                return;
+            }
+
+            if (isProtected(location, player)
+                    || type.isAir()
+                    || type.equals(Material.WATER)
+                    || type.equals(Material.LAVA)
+                    || type.equals(Material.ICE)
+            ) {
                 isBaseSafe = false;
                 break;
             } else {
                 isBaseSafe = true;
             }
         }
+
         for (Location location : place) {
             Material type = location.getBlock().getType();
             if (isProtected(location, player) || type.isSolid()|| type.equals(Material.WATER)
@@ -54,6 +73,18 @@ public class SafeCheck {
         RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
         return !set.testState(WorldGuardPlugin.inst().wrapPlayer(player), Flags.BUILD);
+    }
+
+    private boolean isLocationClaimedByGriefPrevention(Location location, QuickCamp plugin) {
+        GriefPreventionClaimCheck gpClaimCheck = new GriefPreventionClaimCheck();
+        return gpClaimCheck.isClaimed(location);
+    }
+
+    private boolean isLocationInTown(Location location, QuickCamp plugin) {
+        return !TownyAPI.getInstance().isWilderness(location);
+    }
+    public String getMsgRegion() {
+        return region;
     }
 }
 
