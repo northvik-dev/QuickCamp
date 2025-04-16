@@ -46,13 +46,14 @@ public class CampPlace {
                     claimHandler.setRegionFlags(player);
                     setCamp(templateName);
                     locatedCampPDC.setCamp();
-                    player.sendMessage(ChatColor.DARK_GREEN + "You have set camp at: " + ChatColor.GREEN+ locatedCampPDC.getCampLocation());
+                    player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_location")
+                                    .replace("%location%", locatedCampPDC.getCampLocation()));
                 }
             } else {
-                player.sendMessage(ChatColor.RED + "You cannot place camp" + (safeCheck.getMsgRegion() != null ? safeCheck.getMsgRegion() : " here!" ) );
+                player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_place_reject") + (safeCheck.getMsgRegion() != null ? safeCheck.getMsgRegion() : " here!" ) );
             }
         } else {
-            player.sendMessage(ChatColor.RED + "You cannot place more than one camp!");
+            player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_place_limit"));
         };
 
     }

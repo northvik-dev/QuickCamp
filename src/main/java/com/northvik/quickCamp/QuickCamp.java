@@ -3,6 +3,7 @@ package com.northvik.quickCamp;
 import com.northvik.quickCamp.listeners.BlockInteractionListener;
 import com.northvik.quickCamp.listeners.GuiMenuListener;
 import com.northvik.quickCamp.listeners.LinkedItemUseListener;
+import com.northvik.quickCamp.managers.msgConfig;
 import com.northvik.quickCamp.utils.DependencyCheck;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -14,12 +15,15 @@ public final class QuickCamp extends JavaPlugin implements Listener {
 
     private QuickCamp main;
     private final DependencyCheck dependencyCheck = new DependencyCheck();
+    msgConfig msgs;
 
     @Override
     public void onEnable() {
         main = this;
         dependencyCheck.toggle();
         Bukkit.getLogger().info("Dependency check for Towny completed: " + dependencyCheck.isTowny());
+
+        msgs = new msgConfig(this);
 
         Metrics metrics = new Metrics(this, 25164);
         getCommand("camp").setExecutor(new CommandHandler(this));
@@ -34,6 +38,9 @@ public final class QuickCamp extends JavaPlugin implements Listener {
 
     }
 
+    public msgConfig getMsgConfig (){
+        return msgs;
+    }
     public DependencyCheck getDependencyCheck() {
         return dependencyCheck;
     }
