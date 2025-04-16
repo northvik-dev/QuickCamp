@@ -66,7 +66,7 @@ public class BlockInteractionListener implements Listener {
                         }
                     }
                     e.setCancelled(true);
-                    player.sendMessage(grey + "Sorry! You not an owner!");
+                    player.sendMessage(plugin.getMsgConfig().msgBuilder("not_an_owner"));
 
                 }
                 if (e.getItem() != null && e.getItem().getType() == Material.LAVA_BUCKET) {
@@ -96,7 +96,7 @@ public class BlockInteractionListener implements Listener {
             // Check if PVP is denied in the region
             if (isPlayerInRegion(attacker)&&!regionSet.testState(WorldGuardPlugin.inst().wrapPlayer(attacker), Flags.PVP)) {
                 event.setCancelled(true);
-                attacker.sendMessage(grey+ "You cannot harm entity here!");
+                attacker.sendMessage(plugin.getMsgConfig().msgBuilder("harm_entity"));
             }
         }
     }
@@ -115,7 +115,7 @@ public class BlockInteractionListener implements Listener {
             // Check if PVP or projectile use is denied in the region
             if (isPlayerInRegion(shooter) && !regionSet.testState(WorldGuardPlugin.inst().wrapPlayer(shooter), Flags.PVP)) {
                 event.setCancelled(true);
-                shooter.sendMessage(grey+ "You cannot use ranged weapons here!");
+                shooter.sendMessage(plugin.getMsgConfig().msgBuilder("range_weapon"));
             }
         }
     }

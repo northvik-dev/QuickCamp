@@ -50,9 +50,7 @@ public class CommandHandler implements CommandExecutor {
             if (command.getName().equalsIgnoreCase("camp")) {
                 if (strings.length == 0) {
                     if (isPermission(player, "quickcamp.camp")) {
-                        player.sendMessage(ChatColor.YELLOW + "Usage:"+
-                                "\n\n /camp remove" +
-                                "\n\n /camp location");
+                        player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_command_usage"));
                         return true;
                     }
                 } else {
@@ -102,7 +100,8 @@ public class CommandHandler implements CommandExecutor {
                                 String itemName = itemMeta.getDisplayName();
                                 // Send feedback to sender and player
                                 sender.sendMessage((ChatColor.GRAY+"Gave ") + (itemName) + (ChatColor.GRAY+" to ") + (ChatColor.BOLD+target.getName()));
-                                target.sendMessage("You received " + itemName);
+                                target.sendMessage(plugin.getMsgConfig().msgBuilder("received_item")
+                                        .replace("%item%", itemName));
                             }
                             return true;
                         }
@@ -117,9 +116,10 @@ public class CommandHandler implements CommandExecutor {
                     } else if (subCommand.equalsIgnoreCase("location")) {
                         if (isPermission(player, "quickcamp.camp")) {
                             if (lc.isCamping()) {
-                                player.sendMessage(ChatColor.DARK_GREEN + "Your camp located at: " + ChatColor.GREEN + lc.getCampLocation());
+                                player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_located")
+                                        .replace("%location%",lc.getCampLocation()));
                             } else {
-                                player.sendMessage(ChatColor.RED + "You don't have any camp set!");
+                                player.sendMessage(plugin.getMsgConfig().msgBuilder("no_camp_located"));
                             }
                         }
                     } else if (subCommand.equalsIgnoreCase("help")) {
@@ -156,7 +156,7 @@ public class CommandHandler implements CommandExecutor {
 
     public boolean isPermission (Player player, String permission){
         if (!player.hasPermission(permission)){
-            player.sendMessage(ChatColor.RED + "You don't have permission to use this command");
+            player.sendMessage(plugin.getMsgConfig().msgBuilder("no_permission"));
             return false;
         }
         return true;

@@ -35,7 +35,7 @@ public class CampRemove {
         lc.removeCamping();
         if (locationList.isEmpty()){
 
-            player.sendMessage(ChatColor.RED + "You don't have any camp to remove!");
+            player.sendMessage(plugin.getMsgConfig().msgBuilder("no_camp"));
         }else {
 
             for (Map<?, ?> map : locationList) {
@@ -58,7 +58,7 @@ public class CampRemove {
 
             claimHandler.removeClaim(player);
 
-            player.sendMessage(ChatColor.GREEN + "Your camp been removed!");
+            player.sendMessage(plugin.getMsgConfig().msgBuilder("camp_removed"));
         }
     }
 
